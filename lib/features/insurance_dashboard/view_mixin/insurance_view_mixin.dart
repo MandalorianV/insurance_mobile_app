@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:insurance_mobile_app/features/insurance_dashboard/bloc/insurance_bloc.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/view/insurance_view.dart';
 
 mixin InsuranceViewMixin on State<InsuranceView> {
   @override
   void initState() {
     super.initState();
+    context.read<InsuranceBloc>().add(GetInsuranceListEvent());
   }
 
   @override
@@ -13,6 +16,6 @@ mixin InsuranceViewMixin on State<InsuranceView> {
   }
 
   Future<void> onRefresh() async {
-    await Future.delayed(Duration(seconds: 2));
+    context.read<InsuranceBloc>().add(GetInsuranceListEvent());
   }
 }

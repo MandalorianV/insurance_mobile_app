@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "type": "Araç Sigortası",
+    "subtitle": "Toyota Corolla · 2022",
+    "emoji": "🚗",
+    "status": "Aktif",
+    "status_color": "#22D3A5",
+    "policy_no": "ARC-2024-00812",
+    "expiry": "15 Mar 2026",
+    "premium": "₺4.200",
+    "period": "/ yıl",
+    "coverage": "Kasko + Trafik",
+    "gradient_hex": ["#1a3a6e", "#0f2347"],
+    "claims_count": 0,
+    "coverage_items": [
+      { "name": "Maddi Hasar", "limit": "₺250.000", "covered": true },
+      { "name": "Bodily Injury", "limit": "₺500.000", "covered": true },
+      { "name": "Cam Hasarı", "limit": "₺5.000", "covered": true },
+      { "name": "Sel / Doğal Afet", "limit": "Yok", "covered": false }
+    ]
+  },
+  {
+    "id": 2,
+    "type": "Sağlık Sigortası",
+    "subtitle": "Bireysel · Tam Kapsamlı",
+    "emoji": "🏥",
+    "status": "Aktif",
+    "status_color": "#22D3A5",
+    "policy_no": "SGL-2024-03341",
+    "expiry": "01 Jul 2025",
+    "premium": "₺2.850",
+    "period": "/ ay",
+    "coverage": "Yatarak + Ayakta",
+    "gradient_hex": ["#1a4a3a", "#0f2d26"],
+    "claims_count": 2,
+    "coverage_items": [
+      { "name": "Yatarak Tedavi", "limit": "Sınırsız", "covered": true },
+      { "name": "Ayakta Tedavi", "limit": "₺50.000", "covered": true },
+      { "name": "Diş Tedavisi", "limit": "₺10.000", "covered": true },
+      { "name": "Estetik İşlemler", "limit": "Yok", "covered": false }
+    ]
+  },
+  {
+    "id": 3,
+    "type": "Konut Sigortası",
+    "subtitle": "Kadıköy Dairesi · 120m²",
+    "emoji": "🏠",
+    "status": "Yenileme Gerekli",
+    "status_color": "#F59E0B",
+    "policy_no": "KNT-2023-07112",
+    "expiry": "30 Apr 2025",
+    "premium": "₺1.600",
+    "period": "/ yıl",
+    "coverage": "Yangın + Hırsızlık",
+    "gradient_hex": ["#3a2a0f", "#241a08"],
+    "claims_count": 1,
+    "coverage_items": [
+      { "name": "Yangın", "limit": "₺1.500.000", "covered": true },
+      { "name": "Hırsızlık", "limit": "₺100.000", "covered": true },
+      { "name": "Su Baskını", "limit": "Yok", "covered": false },
+      { "name": "Deprem", "limit": "Yok", "covered": false }
+    ]
+  }
+]

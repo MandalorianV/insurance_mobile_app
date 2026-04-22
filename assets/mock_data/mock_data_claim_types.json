@@ -1,0 +1,7 @@
+[
+  { "id": "kaza", "label": "Trafik Kazası", "emoji": "💥" },
+  { "id": "hirsizlik", "label": "Hırsızlık", "emoji": "🔓" },
+  { "id": "hasar", "label": "Hasar / Kırık", "emoji": "🔨" },
+  { "id": "yangin", "label": "Yangın", "emoji": "🔥" },
+  { "id": "diger", "label": "Diğer", "emoji": "📋" }
+]

@@ -26,3 +26,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/mock_data/mock_insurance_dashboard.json
+    - assets/mock_data/mock_data_claim_types.json

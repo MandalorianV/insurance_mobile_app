@@ -2,11 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/models/insurance_model.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/services/insurance_services.dart';
 
-abstract class IInsuranceRepository {
+abstract class InsuranceRepositoryInterface {
   Future<List<InsuranceModel>> getActivePolicies();
 }
 
-class InsuranceRepository implements IInsuranceRepository {
+class InsuranceRepository implements InsuranceRepositoryInterface {
   final InsuranceServices _service;
   InsuranceRepository(this._service);
   @override
