@@ -18,7 +18,6 @@ void main() {
   );
   final dio = DioClient().instance;
 
-  // 2. Servisi oluştur (Dio bağımlılığını veriyoruz)
   final insuranceServices = InsuranceServices(dio);
 
   runApp(MainApp(insuranceServices: insuranceServices));

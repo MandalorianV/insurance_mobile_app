@@ -1,7 +1,26 @@
-[
-  { "id": "kaza", "label": "Trafik Kazası", "emoji": "💥" },
-  { "id": "hirsizlik", "label": "Hırsızlık", "emoji": "🔓" },
-  { "id": "hasar", "label": "Hasar / Kırık", "emoji": "🔨" },
-  { "id": "yangin", "label": "Yangın", "emoji": "🔥" },
-  { "id": "diger", "label": "Diğer", "emoji": "📋" }
-]
+{
+  "1": [ 
+    { "id": "kaza", "label": "Trafik Kazası", "emoji": "💥" },
+    { "id": "hirsizlik", "label": "Araç Hırsızlığı", "emoji": "🔓" },
+    { "id": "cam", "label": "Cam Kırılması", "emoji": "💎" },
+    { "id": "diger", "label": "Diğer", "emoji": "📋" }
+  ],
+  "2": [
+    { "id": "muayene", "label": "Muayene", "emoji": "🩺" },
+    { "id": "ilac", "label": "İlaç Gideri", "emoji": "💊" },
+    { "id": "ameliyat", "label": "Ameliyat", "emoji": "🔪" },
+    { "id": "diger", "label": "Diğer", "emoji": "📋" }
+  ],
+  "3": [
+    { "id": "yangin", "label": "Yangın", "emoji": "🔥" },
+    { "id": "su_baskini", "label": "Su Baskını", "emoji": "🌊" },
+    { "id": "hirsizlik", "label": "Ev Hırsızlığı", "emoji": "🏠" },
+    { "id": "diger", "label": "Diğer", "emoji": "📋" }
+  ],
+  "4": [
+    { "id": "bagaj", "label": "Bagaj Kaybı", "emoji": "🧳" },
+    { "id": "iptal", "label": "Uçuş İptali", "emoji": "❌" },
+    { "id": "saglik_acil", "label": "Yurtdışı Acil Sağlık", "emoji": "🚑" },
+    { "id": "diger", "label": "Diğer", "emoji": "📋" }
+  ]
+}

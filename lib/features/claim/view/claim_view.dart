@@ -1,11 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insurance_mobile_app/core/network/client/dio_interceptor.dart';
 import 'package:insurance_mobile_app/features/claim/bloc/claim_bloc.dart';
-import 'package:insurance_mobile_app/features/claim/models/claim_types_model.dart';
 import 'package:insurance_mobile_app/features/claim/repository/claim_repository.dart';
-import 'package:insurance_mobile_app/features/claim/services/claim_services.dart';
 import 'package:insurance_mobile_app/features/claim/view/claim_view_mixin.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/models/insurance_model.dart';
 import 'package:insurance_mobile_app/theme/app_theme.dart';
@@ -19,41 +15,9 @@ class ClaimView extends StatefulWidget {
 }
 
 class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
-  int _step = 1;
-  String? _selectedClaimTypeId;
-  bool _submitted = false;
-  final dio = DioClient().instance;
-
-  // 2. Servisi oluştur (Dio bağımlılığını veriyoruz)
-  ClaimServices? claimServices;
-
-  final _dateController = TextEditingController();
-  final _locationController = TextEditingController();
-  final _plateController = TextEditingController();
-  final _descController = TextEditingController();
-  final _phoneController = TextEditingController();
-
-  List<ClaimType> claimTypes = [];
-
-  @override
-  void initState() {
-    super.initState();
-    claimServices = ClaimServices(dio);
-  }
-
-  @override
-  void dispose() {
-    _dateController.dispose();
-    _locationController.dispose();
-    _plateController.dispose();
-    _descController.dispose();
-    _phoneController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (_submitted) return _buildSuccessScreen();
+    if (submitted) return _buildSuccessScreen();
 
     return BlocProvider(
       create: (context) =>
@@ -71,9 +35,9 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-                    child: _step == 1
+                    child: step == 1
                         ? _buildStep1()
-                        : _step == 2
+                        : step == 2
                         ? _buildStep2()
                         : _buildStep3(),
                   ),
@@ -140,9 +104,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
                     height: 4,
                     margin: EdgeInsets.only(right: index < 2 ? 6 : 0),
                     decoration: BoxDecoration(
-                      color: index < _step
-                          ? AppColors.accent
-                          : AppColors.border,
+                      color: index < step ? AppColors.accent : AppColors.border,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -151,7 +113,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
             ),
             const SizedBox(height: 6),
             Text(
-              'Adım $_step/3 · ${stepLabels[_step - 1]}',
+              'Adım $step/3 · ${stepLabels[step - 1]}',
               style: AppTextStyles.muted.copyWith(fontSize: 11),
             ),
           ],
@@ -170,9 +132,9 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
         ),
         const SizedBox(height: 16),
         ...claimTypes.map((ct) {
-          final isSelected = _selectedClaimTypeId == ct.id;
+          final isSelected = selectedClaimTypeId == ct.id;
           return GestureDetector(
-            onTap: () => setState(() => _selectedClaimTypeId = ct.id),
+            onTap: () => setState(() => selectedClaimTypeId = ct.id),
             child: Container(
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
@@ -223,25 +185,25 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
         const SizedBox(height: 16),
         _formField(
           label: 'Tarih & Saat',
-          controller: _dateController,
+          controller: dateController,
           hint: 'gg.aa.yyyy ss:dd',
         ),
         const SizedBox(height: 14),
         _formField(
           label: 'Olay Yeri',
-          controller: _locationController,
+          controller: locationController,
           hint: 'Şehir, Semt, Sokak...',
         ),
         const SizedBox(height: 14),
         _formField(
           label: 'Plaka (varsa)',
-          controller: _plateController,
+          controller: plateController,
           hint: '34 ABC 123',
         ),
         const SizedBox(height: 14),
         _formField(
           label: 'Olay Açıklaması',
-          controller: _descController,
+          controller: descController,
           hint: 'Hasarı kısaca açıklayın...',
           maxLines: 4,
         ),
@@ -296,7 +258,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
         const SizedBox(height: 16),
         _formField(
           label: 'Telefon',
-          controller: _phoneController,
+          controller: phoneController,
           hint: '05XX XXX XX XX',
           keyboardType: TextInputType.phone,
         ),
@@ -326,14 +288,12 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
               const SizedBox(height: 8),
               _summaryRow(
                 'Tarih',
-                _dateController.text.isEmpty ? '-' : _dateController.text,
+                dateController.text.isEmpty ? '-' : dateController.text,
               ),
               const SizedBox(height: 8),
               _summaryRow(
                 'Konum',
-                _locationController.text.isEmpty
-                    ? '-'
-                    : _locationController.text,
+                locationController.text.isEmpty ? '-' : locationController.text,
               ),
             ],
           ),
@@ -388,7 +348,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
   }
 
   Widget _buildBottomButton() {
-    final isLastStep = _step == 3;
+    final isLastStep = step == 3;
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
       color: AppColors.bg,
@@ -414,9 +374,9 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
           child: ElevatedButton(
             onPressed: () {
               if (!isLastStep) {
-                setState(() => _step++);
+                setState(() => step++);
               } else {
-                setState(() => _submitted = true);
+                setState(() => submitted = true);
               }
             },
             style: ElevatedButton.styleFrom(
