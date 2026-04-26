@@ -1,0 +1,149 @@
+{
+  "app_name": "Sigortam",
+
+  "common": {
+    "loading": "Yükleniyor...",
+    "retry": "Tekrar Dene",
+    "back": "Geri",
+    "continue": "Devam Et",
+    "send": "Bildirimi Gönder",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "close": "Kapat",
+    "yes": "Evet",
+    "no": "Hayır",
+    "error_generic": "Bir hata oluştu. Lütfen tekrar deneyin.",
+    "error_network": "İnternet bağlantınızı kontrol edin.",
+    "error_not_found": "Kayıt bulunamadı.",
+    "error_server": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
+    "records": "Kayıt"
+  },
+
+  "dashboard": {
+    "greeting": "Merhaba, Ahmet 👋",
+    "title": "Poliçelerim",
+    "section_title": "SİGORTA POLİÇELERİ",
+    "total_coverage": "Toplam Koruma",
+    "active_policies": "{count} Aktif Poliçe",
+    "monthly_premium": "Aylık Prim",
+    "error_title": "Poliçeler yüklenemedi",
+    "error_subtitle": "Bağlantınızı kontrol edip tekrar deneyin.",
+    "empty_title": "Henüz poliçeniz yok",
+    "empty_subtitle": "Yeni bir sigorta poliçesi eklemek için danışmanınızla iletişime geçin."
+  },
+
+  "policy_card": {
+    "expiry": "Bitiş",
+    "coverage": "Kapsam",
+    "premium": "Prim"
+  },
+
+  "policy_detail": {
+    "title": "Poliçe Detayı",
+    "policy_no": "Poliçe No",
+    "status": "Durum",
+    "start_date": "Başlangıç Tarihi",
+    "end_date": "Bitiş Tarihi",
+    "coverage": "Kapsam",
+    "annual_premium": "Yıllık Prim",
+    "coverage_details": "Teminat Detayları",
+    "claims_history": "Hasar Geçmişi",
+    "no_claims": "Henüz hasar kaydı bulunmuyor.",
+    "existing_claims": "{count} adet geçmiş hasar kaydı mevcut",
+    "create_claim_btn": "Hasar Bildirimi Oluştur",
+    "error_title": "Detay yüklenemedi",
+    "error_subtitle": "Poliçe bilgileri alınamadı. Tekrar deneyin."
+  },
+
+  "claim": {
+    "title": "Hasar Bildirimi",
+    "step_indicator": "Adım {step}/3 · {label}",
+    "step1_label": "Hasar Türü",
+    "step2_label": "Olay Detayları",
+    "step3_label": "İletişim",
+    "step1_title": "Hasar türünü seçin:",
+    "step1_subtitle": "Bildiriminizi en iyi tanımlayan kategoriyi seçin.",
+    "step2_title": "Olay bilgilerini girin:",
+    "step3_title": "İletişim bilgileri:",
+
+    "field_date": "Tarih & Saat *",
+    "field_date_hint": "gg.aa.yyyy ss:dd",
+    "field_date_helper": "Olayın gerçekleştiği tarih ve saati girin",
+    "field_location": "Olay Yeri *",
+    "field_location_hint": "İstanbul, Kadıköy, Moda Cad. No:12",
+    "field_location_helper": "Şehir, ilçe ve sokak bilgisini ekleyin",
+    "field_plate": "Plaka",
+    "field_plate_hint": "34ABC123",
+    "field_plate_helper": "Araç sigortası için opsiyonel ama süreci hızlandırır",
+    "field_description": "Olay Açıklaması *",
+    "field_description_hint": "Hasarın nasıl oluştuğunu ayrıntılı anlatın...",
+    "field_description_helper": "En az 30 karakter",
+    "field_phone": "Cep Telefonu *",
+    "field_phone_hint": "05XX XXX XX XX",
+    "field_phone_helper": "Eksper sizi bu numara üzerinden arayacaktır",
+    "field_email": "E-posta",
+    "field_email_hint": "ornek@email.com",
+    "field_email_helper": "Bildirim onayı için opsiyonel",
+    "photo_add": "Fotoğraf Ekle",
+    "photo_helper": "Hasar fotoğrafları süreci hızlandırır",
+
+    "summary_title": "Bildirim Özeti",
+    "summary_policy": "Poliçe",
+    "summary_type": "Hasar Türü",
+    "summary_date": "Tarih",
+    "summary_location": "Konum",
+    "summary_plate": "Plaka",
+
+    "validation_select_type": "Devam etmek için bir hasar türü seçmelisiniz.",
+    "validation_error_snack": "Lütfen eksik veya hatalı alanları düzeltin.",
+    "validation_date_required": "Tarih ve saat zorunludur",
+    "validation_date_format": "Format: gg.aa.yyyy ss:dd  (örn. 20.04.2025 14:30)",
+    "validation_date_invalid_month": "Geçersiz ay değeri",
+    "validation_date_invalid_day": "Geçersiz gün değeri",
+    "validation_date_invalid_time": "Geçersiz saat değeri",
+    "validation_date_future": "Olay tarihi gelecekte olamaz",
+    "validation_date_too_old": "Olay 1 yıldan daha eski olamaz",
+    "validation_location_required": "Olay yeri zorunludur",
+    "validation_location_min": "Lütfen daha ayrıntılı adres girin (min. 10 karakter)",
+    "validation_location_max": "Adres en fazla 200 karakter olabilir",
+    "validation_plate_invalid": "Geçersiz plaka formatı (örn. 34ABC123)",
+    "validation_desc_required": "Olay açıklaması zorunludur",
+    "validation_desc_min": "Lütfen daha ayrıntılı açıklama girin (min. 30 karakter)",
+    "validation_desc_max": "En fazla 1000 karakter girilebilir",
+    "validation_phone_required": "Telefon numarası zorunludur",
+    "validation_phone_invalid": "Geçerli bir Türk cep numarası girin (05XX XXX XX XX)",
+    "validation_email_invalid": "Geçerli bir e-posta adresi girin",
+
+    "success_title": "Bildirim Alındı!",
+    "success_subtitle": "Hasar bildiriminiz başarıyla oluşturuldu.",
+    "success_info": "Eksper en kısa sürede sizinle iletişime geçecektir. Tahmini süre 24-48 saat.",
+    "back_to_policies": "Poliçelerime Dön",
+
+    "error_title": "Hasar türleri yüklenemedi",
+    "error_subtitle": "Lütfen tekrar deneyin."
+  },
+
+  "claim_detail": {
+    "title": "Hasar Detayı",
+    "ref_no": "Referans No",
+    "status": "Durum",
+    "type": "Hasar Türü",
+    "date": "Olay Tarihi",
+    "location": "Olay Yeri",
+    "plate": "Plaka",
+    "description": "Açıklama",
+    "phone": "Telefon",
+    "status_pending": "Değerlendirmede",
+    "status_approved": "Onaylandı",
+    "status_rejected": "Reddedildi",
+    "status_in_progress": "İşlemde",
+    "error_title": "Hasar detayı yüklenemedi",
+    "error_subtitle": "Lütfen tekrar deneyin."
+  },
+
+  "settings": {
+    "language": "Dil",
+    "language_tr": "Türkçe",
+    "language_en": "İngilizce"
+  }
+}

@@ -7,14 +7,21 @@ part 'insurance_event.dart';
 part 'insurance_state.dart';
 
 class InsuranceBloc extends Bloc<InsuranceEvent, InsuranceState> {
-  InsuranceBloc(InsuranceRepository insuranceRepository)
-    : super(InsuranceInitial()) {
+  InsuranceBloc(InsuranceRepository insuranceRepository) : super(InsuranceInitial()) {
     on<InsuranceEvent>((event, emit) {});
+
     on<GetInsuranceListEvent>((event, emit) async {
       emit(LoadingListState());
-      List<InsuranceModel> insuranceList = await insuranceRepository
-          .getActivePolicies();
-      emit(GetInsuranceListState(insuranceList: insuranceList));
+      try {
+        final insuranceList = await insuranceRepository.getActivePolicies();
+        if (insuranceList.isEmpty) {
+          emit(InsuranceEmptyState());
+        } else {
+          emit(GetInsuranceListState(insuranceList: insuranceList));
+        }
+      } catch (e) {
+        emit(InsuranceListError(message: e.toString()));
+      }
     });
   }
 }

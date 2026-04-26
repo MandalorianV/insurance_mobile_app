@@ -1,7 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:insurance_mobile_app/core/helpers/hex_to_color_extension.dart';
-import 'package:insurance_mobile_app/theme/app_theme.dart';
+import 'package:insurance_mobile_app/core/widgets/error_widgets.dart';
+import 'package:insurance_mobile_app/core/widgets/shimmer_widgets.dart';
+import 'package:insurance_mobile_app/theme/theme_extension.dart';
 import '../models/insurance_model.dart';
 
 class InsuranceViewDetails extends StatefulWidget {
@@ -14,6 +17,12 @@ class InsuranceViewDetails extends StatefulWidget {
 
 class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
   InsuranceModel get insurance => widget.insurance;
+
+  // Detay sayfası şu an statik veri gösteriyor.
+  // İleride BLoC'a bağlanacaksa buraya mixin / BlocBuilder eklenebilir.
+  bool _loading = false;
+  String? _error;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,20 +30,28 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
         children: [
           _buildHeroHeader(context),
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildInfoGrid(),
-                  const SizedBox(height: 16),
-                  _buildCoverageCard(),
-                  const SizedBox(height: 16),
-                  _buildClaimsHistoryCard(),
-                  const SizedBox(height: 24),
-                ],
-              ),
-            ),
+            child: _loading
+                ? const PolicyDetailShimmer()
+                : _error != null
+                ? AppErrorWidget(
+                    title: 'policy_detail.error_title'.tr(),
+                    subtitle: 'policy_detail.error_subtitle'.tr(),
+                    onRetry: () => setState(() => _error = null),
+                  )
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildInfoGrid(context),
+                        const SizedBox(height: 16),
+                        _buildCoverageCard(context),
+                        const SizedBox(height: 16),
+                        _buildClaimsHistoryCard(context),
+                        const SizedBox(height: 24),
+                      ],
+                    ),
+                  ),
           ),
           _buildCTAButton(context),
         ],
@@ -46,9 +63,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: widget.insurance.gradientHex
-              .map((hex) => hex.toColor())
-              .toList(),
+          colors: insurance.gradientHex.map((h) => h.toColor()).toList(),
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -57,7 +72,6 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
         bottom: false,
         child: Stack(
           children: [
-            // Decorative circles
             Positioned(
               right: -40,
               top: -40,
@@ -87,7 +101,6 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Back button
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
@@ -97,9 +110,9 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
                         color: Colors.white.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.arrow_back_ios_new_rounded,
-                        color: AppColors.textPrimary,
+                        color: context.appColors.textPrimary,
                         size: 16,
                       ),
                     ),
@@ -116,7 +129,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
                         ),
                         child: Center(
                           child: Text(
-                            widget.insurance.emoji,
+                            insurance.emoji,
                             style: const TextStyle(fontSize: 28),
                           ),
                         ),
@@ -126,15 +139,14 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.insurance.type,
-                            style: AppTextStyles.heading.copyWith(fontSize: 20),
+                            insurance.type,
+                            style: context.textTheme.headlineMedium,
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            widget.insurance.subtitle,
-                            style: AppTextStyles.sub.copyWith(
-                              fontSize: 13,
-                              color: AppColors.textSub.withOpacity(0.8),
+                            insurance.subtitle,
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: context.appColors.textSub.withOpacity(0.8),
                             ),
                           ),
                         ],
@@ -158,19 +170,13 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Poliçe No',
-                              style: AppTextStyles.sub.copyWith(
-                                fontSize: 11,
-                                color: AppColors.textSub.withOpacity(0.6),
-                              ),
+                              'policy_detail.policy_no'.tr(),
+                              style: context.textTheme.labelSmall,
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              widget.insurance.policyNo,
-                              style: AppTextStyles.body.copyWith(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              insurance.policyNo,
+                              style: context.textTheme.titleSmall,
                             ),
                           ],
                         ),
@@ -178,11 +184,8 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              'Durum',
-                              style: AppTextStyles.sub.copyWith(
-                                fontSize: 11,
-                                color: AppColors.textSub.withOpacity(0.6),
-                              ),
+                              'policy_detail.status'.tr(),
+                              style: context.textTheme.labelSmall,
                             ),
                             const SizedBox(height: 2),
                             Row(
@@ -192,19 +195,14 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
                                   height: 7,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: widget.insurance.statusColorHex
-                                        .toColor(),
+                                    color: insurance.statusColorHex.toColor(),
                                   ),
                                 ),
                                 const SizedBox(width: 5),
                                 Text(
-                                  widget.insurance.status,
-                                  style: TextStyle(
-                                    fontFamily: 'DM Sans',
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
-                                    color: widget.insurance.statusColorHex
-                                        .toColor(),
+                                  insurance.status,
+                                  style: context.textTheme.titleSmall?.copyWith(
+                                    color: insurance.statusColorHex.toColor(),
                                   ),
                                 ),
                               ],
@@ -223,12 +221,15 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
     );
   }
 
-  Widget _buildInfoGrid() {
+  Widget _buildInfoGrid(BuildContext context) {
     final items = [
-      {'label': 'Başlangıç Tarihi', 'value': '22 Apr 2024'},
-      {'label': 'Bitiş Tarihi', 'value': widget.insurance.expiry},
-      {'label': 'Kapsam', 'value': widget.insurance.coverage},
-      {'label': 'Yıllık Prim', 'value': widget.insurance.premium},
+      {'label': 'policy_detail.start_date'.tr(), 'value': '22 Apr 2024'},
+      {'label': 'policy_detail.end_date'.tr(), 'value': insurance.expiry},
+      {'label': 'policy_detail.coverage'.tr(), 'value': insurance.coverage},
+      {
+        'label': 'policy_detail.annual_premium'.tr(),
+        'value': insurance.premium,
+      },
     ];
     return GridView.count(
       crossAxisCount: 2,
@@ -241,26 +242,17 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
         return Container(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
           decoration: BoxDecoration(
-            color: AppColors.card,
+            color: context.colorCard,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.border),
+            border: Border.all(color: context.colorBorder),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                item['label']!,
-                style: AppTextStyles.muted.copyWith(fontSize: 11),
-              ),
+              Text(item['label']!, style: context.textTheme.labelSmall),
               const SizedBox(height: 4),
-              Text(
-                item['value']!,
-                style: AppTextStyles.body.copyWith(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text(item['value']!, style: context.textTheme.titleSmall),
             ],
           ),
         );
@@ -268,26 +260,23 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
     );
   }
 
-  Widget _buildCoverageCard() {
+  Widget _buildCoverageCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: context.colorCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.colorBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Teminat Detayları',
-            style: AppTextStyles.sub.copyWith(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-            ),
+            'policy_detail.coverage_details'.tr(),
+            style: context.textTheme.titleMedium,
           ),
           const SizedBox(height: 12),
-          ...widget.insurance.coverageItems.asMap().entries.map((entry) {
+          ...insurance.coverageItems.asMap().entries.map((entry) {
             final i = entry.key;
             final item = entry.value;
             return Column(
@@ -302,36 +291,37 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
                             : Icons.cancel_rounded,
                         size: 16,
                         color: item.covered
-                            ? AppColors.success
-                            : AppColors.danger,
+                            ? context.appColors.success
+                            : context.appColors.danger,
                       ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
                           item.name,
-                          style: AppTextStyles.body.copyWith(
-                            fontSize: 13,
+                          style: context.textTheme.bodyMedium?.copyWith(
                             color: item.covered
-                                ? AppColors.textPrimary
-                                : AppColors.textMuted,
+                                ? context.appColors.textPrimary
+                                : context.appColors.textMuted,
                           ),
                         ),
                       ),
                       Text(
                         item.limit,
-                        style: AppTextStyles.sub.copyWith(
-                          fontSize: 13,
+                        style: context.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w500,
                           color: item.covered
-                              ? AppColors.textSub
-                              : AppColors.textMuted,
+                              ? context.appColors.textSub
+                              : context.appColors.textMuted,
                         ),
                       ),
                     ],
                   ),
                 ),
-                if (i < widget.insurance.coverageItems.length - 1)
-                  Divider(color: AppColors.border.withOpacity(0.5), height: 1),
+                if (i < insurance.coverageItems.length - 1)
+                  Divider(
+                    color: context.colorBorder.withOpacity(0.5),
+                    height: 1,
+                  ),
               ],
             );
           }),
@@ -340,13 +330,14 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
     );
   }
 
-  Widget _buildClaimsHistoryCard() {
+  Widget _buildClaimsHistoryCard(BuildContext context) {
+    //TODO: Detayları gösterebiliriz. Şimdilik sadece kayıt sayısını gösteriyor.
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: context.colorCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.colorBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -355,44 +346,41 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Hasar Geçmişi',
-                style: AppTextStyles.sub.copyWith(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
+                'policy_detail.claims_history'.tr(),
+                style: context.textTheme.titleMedium,
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: AppColors.accent.withOpacity(0.13),
+                  color: context.colors.primary.withOpacity(0.13),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  '${widget.insurance.claimsCount} Kayıt',
-                  style: const TextStyle(
-                    fontFamily: 'DM Sans',
-                    fontSize: 11,
+                  '${insurance.claimsCount} ${'common.records'.tr()}',
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colors.primary,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.accent,
                   ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          widget.insurance.claimsCount == 0
+          insurance.claimsCount == 0
               ? Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Text(
-                      'Henüz hasar kaydı bulunmuyor.',
-                      style: AppTextStyles.muted.copyWith(fontSize: 13),
+                      'policy_detail.no_claims'.tr(),
+                      style: context.textTheme.bodyMedium,
                     ),
                   ),
                 )
               : Text(
-                  '📋  ${widget.insurance.claimsCount} adet geçmiş hasar kaydı mevcut',
-                  style: AppTextStyles.sub.copyWith(fontSize: 13),
+                  'policy_detail.existing_claims'.tr(
+                    namedArgs: {'count': '${insurance.claimsCount}'},
+                  ),
+                  style: context.textTheme.bodyMedium,
                 ),
         ],
       ),
@@ -402,21 +390,21 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
   Widget _buildCTAButton(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-      color: AppColors.bg,
+      color: context.colorBg,
       child: SizedBox(
         width: double.infinity,
         height: 54,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [AppColors.accent, AppColors.indigo],
+            gradient: LinearGradient(
+              colors: [context.appColors.accent, context.appColors.indigo],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: AppColors.accent.withOpacity(0.25),
+                color: context.appColors.accent.withOpacity(0.25),
                 blurRadius: 24,
                 offset: const Offset(0, 8),
               ),
@@ -424,16 +412,18 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
           ),
           child: ElevatedButton.icon(
             onPressed: () =>
-                context.go('/insuranceDetails/claim', extra: widget.insurance),
+                context.go('/insuranceDetails/claim', extra: insurance),
             icon: const Text('⚡', style: TextStyle(fontSize: 16)),
-            label: const Text(
-              'Hasar Bildirimi Oluştur',
-              style: TextStyle(
-                fontFamily: 'DM Sans',
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
+            label: Text(
+              switch (insurance.category) {
+                'vehicle' => 'Kaza Bildir',
+                'health' => 'Tedavi Bildir',
+                'home' => 'Hasar Bildir',
+                'travel' => 'Olay Bildir',
+                _ => 'Hasar Bildir',
+              },
+              style: context.textTheme.labelLarge?.copyWith(
                 color: Colors.white,
-                letterSpacing: 0.3,
               ),
             ),
             style: ElevatedButton.styleFrom(

@@ -1,0 +1,149 @@
+{
+  "app_name": "MyInsurance",
+
+  "common": {
+    "loading": "Loading...",
+    "retry": "Try Again",
+    "back": "Back",
+    "continue": "Continue",
+    "send": "Submit Claim",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "error_generic": "Something went wrong. Please try again.",
+    "error_network": "Please check your internet connection.",
+    "error_not_found": "Record not found.",
+    "error_server": "Server error. Please try again later.",
+    "records": "Records"
+  },
+
+  "dashboard": {
+    "greeting": "Hello, Ahmet 👋",
+    "title": "My Policies",
+    "section_title": "INSURANCE POLICIES",
+    "total_coverage": "Total Coverage",
+    "active_policies": "{count} Active Policies",
+    "monthly_premium": "Monthly Premium",
+    "error_title": "Could not load policies",
+    "error_subtitle": "Check your connection and try again.",
+    "empty_title": "No policies yet",
+    "empty_subtitle": "Contact your advisor to add a new insurance policy."
+  },
+
+  "policy_card": {
+    "expiry": "Expires",
+    "coverage": "Coverage",
+    "premium": "Premium"
+  },
+
+  "policy_detail": {
+    "title": "Policy Detail",
+    "policy_no": "Policy No",
+    "status": "Status",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "coverage": "Coverage",
+    "annual_premium": "Annual Premium",
+    "coverage_details": "Coverage Details",
+    "claims_history": "Claims History",
+    "no_claims": "No claims filed yet.",
+    "existing_claims": "{count} past claim(s) on record",
+    "create_claim_btn": "File a Damage Claim",
+    "error_title": "Could not load details",
+    "error_subtitle": "Failed to fetch policy information. Please retry."
+  },
+
+  "claim": {
+    "title": "Damage Claim",
+    "step_indicator": "Step {step}/3 · {label}",
+    "step1_label": "Claim Type",
+    "step2_label": "Incident Details",
+    "step3_label": "Contact",
+    "step1_title": "Select claim type:",
+    "step1_subtitle": "Choose the category that best describes your claim.",
+    "step2_title": "Enter incident details:",
+    "step3_title": "Contact information:",
+
+    "field_date": "Date & Time *",
+    "field_date_hint": "dd.mm.yyyy hh:mm",
+    "field_date_helper": "Enter the date and time of the incident",
+    "field_location": "Incident Location *",
+    "field_location_hint": "City, District, Street...",
+    "field_location_helper": "Include city, district and street",
+    "field_plate": "Plate Number",
+    "field_plate_hint": "34ABC123",
+    "field_plate_helper": "Optional for vehicle claims but speeds up the process",
+    "field_description": "Incident Description *",
+    "field_description_hint": "Describe in detail how the damage occurred...",
+    "field_description_helper": "At least 30 characters",
+    "field_phone": "Mobile Phone *",
+    "field_phone_hint": "05XX XXX XX XX",
+    "field_phone_helper": "Our expert will contact you at this number",
+    "field_email": "Email",
+    "field_email_hint": "example@email.com",
+    "field_email_helper": "Optional — for claim confirmation",
+    "photo_add": "Add Photos",
+    "photo_helper": "Damage photos speed up the process",
+
+    "summary_title": "Claim Summary",
+    "summary_policy": "Policy",
+    "summary_type": "Claim Type",
+    "summary_date": "Date",
+    "summary_location": "Location",
+    "summary_plate": "Plate",
+
+    "validation_select_type": "Please select a claim type to continue.",
+    "validation_error_snack": "Please fix the missing or incorrect fields.",
+    "validation_date_required": "Date and time are required",
+    "validation_date_format": "Format: dd.mm.yyyy hh:mm  (e.g. 20.04.2025 14:30)",
+    "validation_date_invalid_month": "Invalid month",
+    "validation_date_invalid_day": "Invalid day",
+    "validation_date_invalid_time": "Invalid time",
+    "validation_date_future": "Incident date cannot be in the future",
+    "validation_date_too_old": "Incident cannot be more than 1 year old",
+    "validation_location_required": "Incident location is required",
+    "validation_location_min": "Please enter a more detailed address (min. 10 characters)",
+    "validation_location_max": "Address cannot exceed 200 characters",
+    "validation_plate_invalid": "Invalid plate format (e.g. 34ABC123)",
+    "validation_desc_required": "Incident description is required",
+    "validation_desc_min": "Please provide a more detailed description (min. 30 characters)",
+    "validation_desc_max": "Maximum 1000 characters allowed",
+    "validation_phone_required": "Phone number is required",
+    "validation_phone_invalid": "Enter a valid Turkish mobile number (05XX XXX XX XX)",
+    "validation_email_invalid": "Enter a valid email address",
+
+    "success_title": "Claim Received!",
+    "success_subtitle": "Your damage claim has been successfully submitted.",
+    "success_info": "Our expert will contact you as soon as possible. Estimated time: 24-48 hours.",
+    "back_to_policies": "Back to My Policies",
+
+    "error_title": "Could not load claim types",
+    "error_subtitle": "Please try again."
+  },
+
+  "claim_detail": {
+    "title": "Claim Detail",
+    "ref_no": "Reference No",
+    "status": "Status",
+    "type": "Claim Type",
+    "date": "Incident Date",
+    "location": "Incident Location",
+    "plate": "Plate",
+    "description": "Description",
+    "phone": "Phone",
+    "status_pending": "Under Review",
+    "status_approved": "Approved",
+    "status_rejected": "Rejected",
+    "status_in_progress": "In Progress",
+    "error_title": "Could not load claim detail",
+    "error_subtitle": "Please try again."
+  },
+
+  "settings": {
+    "language": "Language",
+    "language_tr": "Turkish",
+    "language_en": "English"
+  }
+}

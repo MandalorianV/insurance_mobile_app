@@ -8,14 +8,21 @@ environment:
 
 dependencies:
   bloc: ^9.2.0
+  connectivity_plus: ^7.1.1
   dio: ^5.9.2
+  easy_localization: ^3.0.7
+  equatable: ^2.0.8
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
   freezed: ^3.2.3
   freezed_annotation: ^3.1.0
   go_router: ^17.0.0
+  image_picker: ^1.2.1
   json_annotation: ^4.9.0
+  path_provider: ^2.1.5
+  provider: ^6.1.5+1
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +37,6 @@ flutter:
   assets:
     - assets/mock_data/mock_insurance_dashboard.json
     - assets/mock_data/mock_data_claim_types.json
+    - assets/mock_data/mock_claim_records.json
+    - assets/translations/tr.json
+    - assets/translations/en.json

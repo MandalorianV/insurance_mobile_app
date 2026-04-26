@@ -45,5 +45,10 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+    <string>Hasar fotoğrafı çekmek için kamera izni gerekiyor.</string>
+    
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Hasar fotoğrafı seçmek için galeri izni gerekiyor.</string>
 </dict>
 </plist>

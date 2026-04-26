@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,21 +7,34 @@ import 'package:insurance_mobile_app/core/routes/router.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/bloc/insurance_bloc.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/repository/insurance_repository.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/services/insurance_services.dart';
-import 'package:insurance_mobile_app/theme/app_theme.dart';
+import 'package:insurance_mobile_app/theme/theme_manager.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await ThemeManager.instance.loadSavedTheme();
+  // easy_localization init
+  await EasyLocalization.ensureInitialized();
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
     ),
   );
-  final dio = DioClient().instance;
 
+  final dio = DioClient().instance;
   final insuranceServices = InsuranceServices(dio);
 
-  runApp(MainApp(insuranceServices: insuranceServices));
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('tr'), Locale('en')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('tr'),
+      startLocale: const Locale('tr'),
+      child: MainApp(insuranceServices: insuranceServices),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -30,12 +44,25 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => InsuranceRepository(insuranceServices),
-
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeManager>.value(
+          value: ThemeManager.instance,
+        ),
+        RepositoryProvider(
+          create: (_) => InsuranceRepository(insuranceServices),
+        ),
+      ],
       child: BlocProvider(
         create: (context) => InsuranceBloc(context.read<InsuranceRepository>()),
-        child: MaterialApp.router(routerConfig: router, theme: buildAppTheme()),
+        child: MaterialApp.router(
+          routerConfig: router,
+          theme: ThemeManager.instance.currentTheme,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          debugShowCheckedModeBanner: false,
+        ),
       ),
     );
   }

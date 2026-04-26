@@ -8,6 +8,7 @@ abstract class InsuranceModel with _$InsuranceModel {
   const factory InsuranceModel({
     required int id,
     required String type,
+    required String category,
     required String subtitle,
     required String emoji,
     required String status,
