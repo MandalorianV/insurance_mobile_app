@@ -32,25 +32,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
           ClaimBloc(ClaimRepository(claimServices!))
             ..add(GetClaimTypesEvent(id: widget.insurance.id)),
       child: BlocListener<ClaimBloc, ClaimState>(
-        listener: (context, state) {
-          if (state is ClaimTypesError ||
-              state is ClaimSubmissionError ||
-              state is ClaimRecordsError) {
-            final error = switch (state) {
-              ClaimTypesError s => s.error,
-              ClaimSubmissionError s => s.error,
-              ClaimRecordsError s => s.error,
-              _ => AppError.unknown,
-            };
-
-            context.push('/noInternet', extra: error).then((_) async {
-              FocusManager.instance.primaryFocus?.unfocus();
-              await Future.delayed(const Duration(milliseconds: 1500));
-              if (!context.mounted) return;
-              context.read<ClaimBloc>().add(RetryLastEvent());
-            });
-          }
-        },
+        listener: listener,
         child: Scaffold(
           body: BlocBuilder<ClaimBloc, ClaimState>(
             buildWhen: (previous, current) =>
@@ -110,6 +92,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
           selectedClaimTypeId = claimTypes
               .firstWhere((ct) => ct.label == label)
               .id;
+          selectedDamageType = label;
         },
       ),
       2 => _buildStep2(),

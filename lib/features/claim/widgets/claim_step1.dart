@@ -59,6 +59,7 @@ class ClaimStep1 extends StatelessWidget {
                   return GestureDetector(
                     onTap: () {
                       showStep1Error.value = false;
+
                       onDamageTypeSelected(ct.label);
                       context.read<ClaimBloc>().add(
                         SelectDamageTypeEvent(damageType: ct.label),

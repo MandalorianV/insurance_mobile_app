@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:insurance_mobile_app/core/error/app_error.dart';
 import 'package:insurance_mobile_app/core/network/client/dio_interceptor.dart';
 import 'package:insurance_mobile_app/features/claim/bloc/claim_bloc.dart';
 import 'package:insurance_mobile_app/features/claim/models/claim_types_model.dart';
@@ -209,6 +210,26 @@ mixin ClaimViewMixin on State<ClaimView> {
         ),
       );
       return;
+    }
+  }
+
+  void listener(context, state) {
+    if (state is ClaimTypesError ||
+        state is ClaimSubmissionError ||
+        state is ClaimRecordsError) {
+      final error = switch (state) {
+        ClaimTypesError s => s.error,
+        ClaimSubmissionError s => s.error,
+        ClaimRecordsError s => s.error,
+        _ => AppError.unknown,
+      };
+
+      context.push('/noInternet', extra: error).then((_) async {
+        FocusManager.instance.primaryFocus?.unfocus();
+        await Future.delayed(const Duration(milliseconds: 1500));
+        if (!context.mounted) return;
+        context.read<ClaimBloc>().add(RetryLastEvent());
+      });
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:insurance_mobile_app/core/error/app_error.dart';
 import 'package:insurance_mobile_app/features/claim/models/claim_record_model.dart';
