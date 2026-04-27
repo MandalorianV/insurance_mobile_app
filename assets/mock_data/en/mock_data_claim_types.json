@@ -1,0 +1,26 @@
+{
+  "1": [ 
+    { "id": "kaza", "label": "Traffic Accident", "emoji": "💥" },
+    { "id": "hirsizlik", "label": "Vehicle Theft", "emoji": "🔓" },
+    { "id": "cam", "label": "Glass Damage", "emoji": "💎" },
+    { "id": "diger", "label": "Other", "emoji": "📋" }
+  ],
+  "2": [
+    { "id": "muayene", "label": "Medical Consultation", "emoji": "🩺" },
+    { "id": "ilac", "label": "Medication Expense", "emoji": "💊" },
+    { "id": "ameliyat", "label": "Surgery", "emoji": "🔪" },
+    { "id": "diger", "label": "Other", "emoji": "📋" }
+  ],
+  "3": [
+    { "id": "yangin", "label": "Fire", "emoji": "🔥" },
+    { "id": "su_baskini", "label": "Flood", "emoji": "🌊" },
+    { "id": "hirsizlik", "label": "Home Theft", "emoji": "🏠" },
+    { "id": "diger", "label": "Other", "emoji": "📋" }
+  ],
+  "4": [
+    { "id": "bagaj", "label": "Baggage Loss", "emoji": "🧳" },
+    { "id": "iptal", "label": "Flight Cancellation", "emoji": "❌" },
+    { "id": "saglik_acil", "label": "Emergency Medical Abroad", "emoji": "🚑" },
+    { "id": "diger", "label": "Other", "emoji": "📋" }
+  ]
+}

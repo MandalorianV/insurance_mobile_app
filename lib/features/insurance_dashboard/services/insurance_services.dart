@@ -5,12 +5,15 @@ class InsuranceServices {
   InsuranceServices(this._dio);
 
   Future<List<dynamic>> getActiveInsurances() async {
-    try {
-      final response = await _dio.get('/api/insurances');
-      return response.data;
-    } on DioException catch (e) {
-      // Burada hata yönetimi yapılabilir
-      rethrow;
-    }
+    final response = await _dio.get('/api/insurances');
+    return response.data;
+  }
+
+  Future<List<dynamic>> getInsuranceRecords(String policyNo) async {
+    final response = await _dio.get(
+      '/api/insurance-records',
+      data: {'policyNo': policyNo},
+    );
+    return response.data;
   }
 }

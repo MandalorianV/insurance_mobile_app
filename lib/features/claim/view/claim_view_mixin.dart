@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -70,6 +71,9 @@ mixin ClaimViewMixin on State<ClaimView> {
   void addPhotoOnTap(BuildContext context) async {
     final surfaceColor = context.appColors.surface;
     final style = context.textTheme.titleMedium;
+    final photoAddText = 'claim.photo_add'.tr();
+    final galleryText = 'claim.photo_gallery'.tr();
+    final cameraText = 'claim.photo_camera'.tr();
 
     ImageSource? source = await showModalBottomSheet(
       context: context,
@@ -85,12 +89,12 @@ mixin ClaimViewMixin on State<ClaimView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             const SizedBox(height: 10),
-            Text("Fotoğraf Ekle", style: style),
+            Text(photoAddText, style: style),
             Row(
               children: <Widget>[
                 Expanded(
                   child: ElevatedButton(
-                    child: const Text("Galeriden Seç"),
+                    child: Text(galleryText),
                     onPressed: () =>
                         Navigator.of(context).pop(ImageSource.gallery),
                   ),
@@ -101,7 +105,7 @@ mixin ClaimViewMixin on State<ClaimView> {
               children: <Widget>[
                 Expanded(
                   child: ElevatedButton(
-                    child: const Text("Fotoğraf Çek"),
+                    child: Text(cameraText),
                     onPressed: () =>
                         Navigator.of(context).pop(ImageSource.camera),
                   ),
@@ -115,11 +119,10 @@ mixin ClaimViewMixin on State<ClaimView> {
     );
 
     if (source is! ImageSource) return;
-
     final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile != null) {
       photos.add(pickedFile);
-      photosNotifier.value = List.from(photos); // 👈 rebuild tetikle
+      photosNotifier.value = List.from(photos);
     }
     FocusManager.instance.primaryFocus?.unfocus();
   }
@@ -152,9 +155,8 @@ mixin ClaimViewMixin on State<ClaimView> {
 
   void stepUpOnPressed(BuildContext context) {
     if (selectedClaimTypeId == null && step == 1) {
-      //TODO: handle error with state management, this is just a quick fix
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lütfen hasar türünü seçin.')),
+        SnackBar(content: Text('claim.validation_select_type'.tr())),
       );
       return;
     }

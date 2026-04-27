@@ -12,12 +12,17 @@ abstract class ClaimRecord with _$ClaimRecord {
     @JsonKey(name: 'claim_type_label') required String claimTypeLabel,
     @JsonKey(name: 'claim_type_emoji') required String claimTypeEmoji,
     @JsonKey(name: 'incident_date') required String incidentDate,
-    required String location,
+    String? location,
     String? plate,
+    String? hospital,
+    String? diagnosis,
+    String? address,
+    @JsonKey(name: 'damage_area') String? damageArea,
+    String? country,
     required String description,
     required String phone,
     String? email,
-    required String status, // pending | in_progress | approved | rejected
+    required String status,
     @JsonKey(name: 'created_at') required String createdAt,
   }) = _ClaimRecord;
 

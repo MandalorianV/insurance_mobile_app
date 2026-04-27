@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:insurance_mobile_app/core/error/app_error.dart';
+import 'package:insurance_mobile_app/features/claim/models/claim_record_model.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/models/insurance_model.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/services/insurance_services.dart';
 
 abstract class InsuranceRepositoryInterface {
   Future<List<InsuranceModel>> getActivePolicies();
+  Future<List<ClaimRecord>> getInsuranceRecords(String policyNo);
 }
 
 class InsuranceRepository implements InsuranceRepositoryInterface {
@@ -12,22 +15,38 @@ class InsuranceRepository implements InsuranceRepositoryInterface {
   @override
   Future<List<InsuranceModel>> getActivePolicies() async {
     try {
-      // 1. Servis üzerinden ham veriyi iste
       final List<dynamic> rawData = await _service.getActiveInsurances();
-
-      // 2. Ham veriyi (Map) Model nesnelerine dönüştür
       return rawData.map((json) => InsuranceModel.fromJson(json)).toList();
     } on DioException catch (dioError) {
-      // 3. Teknik hatayı yakala ve anlamsal hataya çevir
-      throw _handleNetworkError(dioError);
-    } catch (e) {
-      // Beklenmedik diğer hatalar (Parsing vb.)
-      throw Exception("Veriler işlenirken bir hata oluştu.");
+      throw _mapDioError(dioError);
+    } catch (_) {
+      throw AppError.unknown;
     }
   }
 
-  _handleNetworkError(DioException dioError) {
-    // Hata yönetimi burada yapılabilir
-    return Exception("Ağ hatası oluştu.");
+  @override
+  Future<List<ClaimRecord>> getInsuranceRecords(String policyNo) async {
+    try {
+      final List<dynamic> rawData = await _service.getInsuranceRecords(
+        policyNo,
+      );
+      return rawData.map((json) => ClaimRecord.fromJson(json)).toList();
+    } on DioException catch (dioError) {
+      throw _mapDioError(dioError);
+    } catch (_) {
+      throw AppError.unknown;
+    }
+  }
+
+  AppError _mapDioError(DioException e) {
+    if (e.error is AppError) return e.error as AppError;
+    return switch (e.type) {
+      DioExceptionType.connectionError => AppError.noInternet,
+      DioExceptionType.connectionTimeout => AppError.noInternet,
+      DioExceptionType.receiveTimeout => AppError.timeout,
+      DioExceptionType.sendTimeout => AppError.timeout,
+      DioExceptionType.badResponse => AppError.serverError,
+      _ => AppError.unknown,
+    };
   }
 }

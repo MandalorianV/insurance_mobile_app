@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -62,7 +63,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
                 step = state.step;
               }
               if (state is ClaimSubmissionSuccess) {
-                return _buildSuccessScreen();
+                return _buildSuccessScreen(state.refNo);
               }
 
               final isSubmitting = state is ClaimSubmitting;
@@ -102,11 +103,31 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
 
   Widget _buildHeader() {
     final stepLabels = switch (widget.insurance.category) {
-      'vehicle' => ['Kaza Türü', 'Kaza Detayları', 'İletişim'],
-      'health' => ['Tedavi Türü', 'Tedavi Detayları', 'İletişim'],
-      'home' => ['Hasar Türü', 'Hasar Detayları', 'İletişim'],
-      'travel' => ['Olay Türü', 'Olay Detayları', 'İletişim'],
-      _ => ['Hasar Türü', 'Olay Detayları', 'İletişim'],
+      'vehicle' => [
+        'claim.step1_label_vehicle'.tr(),
+        'claim.step2_label_vehicle'.tr(),
+        'claim.step3_label'.tr(),
+      ],
+      'health' => [
+        'claim.step1_label_health'.tr(),
+        'claim.step2_label_health'.tr(),
+        'claim.step3_label'.tr(),
+      ],
+      'home' => [
+        'claim.step1_label_home'.tr(),
+        'claim.step2_label_home'.tr(),
+        'claim.step3_label'.tr(),
+      ],
+      'travel' => [
+        'claim.step1_label_travel'.tr(),
+        'claim.step2_label_travel'.tr(),
+        'claim.step3_label'.tr(),
+      ],
+      _ => [
+        'claim.step1_label'.tr(),
+        'claim.step2_label'.tr(),
+        'claim.step3_label'.tr(),
+      ],
     };
     return SafeArea(
       bottom: false,
@@ -139,11 +160,11 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(switch (widget.insurance.category) {
-                      'vehicle' => 'Kaza Bildirimi',
-                      'health' => 'Tedavi Bildirimi',
-                      'home' => 'Hasar Bildirimi',
-                      'travel' => 'Olay Bildirimi',
-                      _ => 'Hasar Bildirimi',
+                      'vehicle' => 'claim.title_vehicle'.tr(),
+                      'health' => 'claim.title_health'.tr(),
+                      'home' => 'claim.title_home'.tr(),
+                      'travel' => 'claim.title_travel'.tr(),
+                      _ => 'claim.title'.tr(),
                     }, style: context.textTheme.headlineLarge),
                     Text(
                       '${widget.insurance.type} · ${widget.insurance.policyNo}',
@@ -154,7 +175,6 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
               ],
             ),
             const SizedBox(height: 16),
-            // Step progress bar
             Row(
               children: List.generate(3, (index) {
                 return Expanded(
@@ -173,7 +193,9 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
             ),
             const SizedBox(height: 6),
             Text(
-              'Adım $step/3 · ${stepLabels[step - 1]}',
+              'claim.step_indicator'.tr(
+                namedArgs: {'step': '$step', 'label': stepLabels[step - 1]},
+              ),
               style: context.textTheme.labelSmall,
             ),
           ],
@@ -187,11 +209,11 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(switch (widget.insurance.category) {
-          'vehicle' => 'Kaza türünü seçin:',
-          'health' => 'Tedavi türünü seçin:',
-          'home' => 'Hasar türünü seçin:',
-          'travel' => 'Olay türünü seçin:',
-          _ => 'Hasar türünü seçin:',
+          'vehicle' => 'claim.step1_title_vehicle'.tr(),
+          'health' => 'claim.step1_title_health'.tr(),
+          'home' => 'claim.step1_title_home'.tr(),
+          'travel' => 'claim.step1_title_travel'.tr(),
+          _ => 'claim.step1_title'.tr(),
         }, style: context.textTheme.bodyMedium),
         const SizedBox(height: 16),
         BlocBuilder<ClaimBloc, ClaimState>(
@@ -211,9 +233,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
 
             return Column(
               children: claimTypes.map((ct) {
-                final isSelected =
-                    selectedClaimTypeId == ct.id; // 👈 artık builder içinde
-
+                final isSelected = selectedClaimTypeId == ct.id;
                 return GestureDetector(
                   onTap: () {
                     context.read<ClaimBloc>().add(
@@ -274,39 +294,42 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Olay bilgilerini girin:', style: context.textTheme.bodyMedium),
+          Text('claim.step2_title'.tr(), style: context.textTheme.bodyMedium),
           const SizedBox(height: 16),
           _formField(
             readOnly: true,
-            label: 'Tarih & Saat',
+            label: 'claim.field_date'.tr(),
             controller: dateController,
-            hint: 'gg.aa.yyyy ss:dd',
+            hint: 'claim.field_date_hint'.tr(),
             onTap: dateTimeSelectionOnTap,
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Tarih seçimi zorunludur' : null,
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_date_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _formField(
-            label: 'Olay Yeri',
+            label: 'claim.field_location'.tr(),
             controller: locationController,
-            hint: 'Şehir, Semt, Sokak...',
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Olay yeri zorunludur' : null,
+            hint: 'claim.field_location_hint'.tr(),
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_location_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _formField(
-            label: 'Plaka (varsa)',
+            label: 'claim.field_plate'.tr(),
             controller: plateController,
-            hint: '34 ABC 123',
+            hint: 'claim.field_plate_hint'.tr(),
           ),
           const SizedBox(height: 14),
           _formField(
-            label: 'Olay Açıklaması',
+            label: 'claim.field_description'.tr(),
             controller: descController,
-            hint: 'Hasarı kısaca açıklayın...',
+            hint: 'claim.field_description_hint'.tr(),
             maxLines: 4,
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Açıklama zorunludur' : null,
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_desc_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _buildPhotoUpload(context),
@@ -322,43 +345,47 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Tedavi bilgilerini girin:',
+            'claim.step2_title_health'.tr(),
             style: context.textTheme.bodyMedium,
           ),
           const SizedBox(height: 16),
           _formField(
             readOnly: true,
-            label: 'Tedavi Tarihi',
+            label: 'claim.field_date'.tr(),
             controller: dateController,
-            hint: 'gg.aa.yyyy ss:dd',
+            hint: 'claim.field_date_hint'.tr(),
             onTap: dateTimeSelectionOnTap,
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Tarih seçimi zorunludur' : null,
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_date_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _formField(
-            label: 'Hastane / Klinik',
+            label: 'claim.field_hospital'.tr(),
             controller: hospitalController,
-            hint: 'Hastane adı ve şehir...',
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Hastane bilgisi zorunludur' : null,
+            hint: 'claim.field_hospital_hint'.tr(),
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_hospital_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _formField(
-            label: 'Tanı / Tedavi Türü',
+            label: 'claim.field_diagnosis'.tr(),
             controller: diagnosisController,
-            hint: 'Ameliyat, muayene, tahlil...',
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Tedavi türü zorunludur' : null,
+            hint: 'claim.field_diagnosis_hint'.tr(),
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_diagnosis_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _formField(
-            label: 'Açıklama',
+            label: 'claim.field_description'.tr(),
             controller: descController,
-            hint: 'Tedavi sürecini kısaca açıklayın...',
+            hint: 'claim.field_description_hint'.tr(),
             maxLines: 4,
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Açıklama zorunludur' : null,
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_desc_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _buildPhotoUpload(context),
@@ -373,41 +400,48 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Hasar bilgilerini girin:', style: context.textTheme.bodyMedium),
+          Text(
+            'claim.step2_title_home'.tr(),
+            style: context.textTheme.bodyMedium,
+          ),
           const SizedBox(height: 16),
           _formField(
             readOnly: true,
-            label: 'Olay Tarihi',
+            label: 'claim.field_date'.tr(),
             controller: dateController,
-            hint: 'gg.aa.yyyy ss:dd',
+            hint: 'claim.field_date_hint'.tr(),
             onTap: dateTimeSelectionOnTap,
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Tarih seçimi zorunludur' : null,
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_date_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _formField(
-            label: 'Konut Adresi',
+            label: 'claim.field_address'.tr(),
             controller: addressController,
-            hint: 'İl, İlçe, Sokak, No...',
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Adres zorunludur' : null,
+            hint: 'claim.field_address_hint'.tr(),
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_address_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _formField(
-            label: 'Hasar Yeri',
+            label: 'claim.field_damage_area'.tr(),
             controller: damageAreaController,
-            hint: 'Mutfak, salon, banyo...',
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Hasar yeri zorunludur' : null,
+            hint: 'claim.field_damage_area_hint'.tr(),
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_damage_area_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _formField(
-            label: 'Hasar Açıklaması',
+            label: 'claim.field_description'.tr(),
             controller: descController,
-            hint: 'Hasarı kısaca açıklayın...',
+            hint: 'claim.field_description_hint'.tr(),
             maxLines: 4,
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Açıklama zorunludur' : null,
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_desc_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _buildPhotoUpload(context),
@@ -422,33 +456,36 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Olay bilgilerini girin:', style: context.textTheme.bodyMedium),
+          Text('claim.step2_title'.tr(), style: context.textTheme.bodyMedium),
           const SizedBox(height: 16),
           _formField(
             readOnly: true,
-            label: 'Olay Tarihi',
+            label: 'claim.field_date'.tr(),
             controller: dateController,
-            hint: 'gg.aa.yyyy ss:dd',
+            hint: 'claim.field_date_hint'.tr(),
             onTap: dateTimeSelectionOnTap,
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Tarih seçimi zorunludur' : null,
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_date_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _formField(
-            label: 'Ülke / Şehir',
+            label: 'claim.field_country'.tr(),
             controller: countryController,
-            hint: 'Almanya, Berlin...',
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Ülke/Şehir zorunludur' : null,
+            hint: 'claim.field_country_hint'.tr(),
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_country_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _formField(
-            label: 'Olay Açıklaması',
+            label: 'claim.field_description'.tr(),
             controller: descController,
-            hint: 'Bagaj kaybı, uçuş gecikmesi, acil tedavi...',
+            hint: 'claim.field_description_hint'.tr(),
             maxLines: 4,
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Açıklama zorunludur' : null,
+            validator: (v) => v == null || v.isEmpty
+                ? 'claim.validation_desc_required'.tr()
+                : null,
           ),
           const SizedBox(height: 14),
           _buildPhotoUpload(context),
@@ -463,26 +500,26 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('İletişim bilgileri:', style: context.textTheme.bodyMedium),
+          Text('claim.step3_title'.tr(), style: context.textTheme.bodyMedium),
           const SizedBox(height: 16),
           _formField(
-            label: 'Telefon',
+            label: 'claim.field_phone'.tr(),
             controller: phoneController,
-            hint: '05XX XXX XX XX',
+            hint: 'claim.field_phone_hint'.tr(),
             keyboardType: TextInputType.phone,
             validator: (v) {
-              if (v == null || v.isEmpty) return 'Telefon numarası zorunludur';
+              if (v == null || v.isEmpty) {
+                return 'claim.validation_phone_required'.tr();
+              }
               final digits = v.replaceAll(RegExp(r'\D'), '');
-              // +90 5XX XXX XX XX → 12 hane, veya 05XX XXX XX XX → 11 hane
               final normalized = digits.startsWith('90') ? digits : '90$digits';
               if (!RegExp(r'^905[0-9]{9}$').hasMatch(normalized)) {
-                return 'Geçerli bir telefon numarası girin';
+                return 'claim.validation_phone_invalid'.tr();
               }
               return null;
             },
           ),
           const SizedBox(height: 16),
-          // Summary
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -494,28 +531,28 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Bildirim Özeti',
+                  'claim.summary_title'.tr(),
                   style: context.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 12),
-                _summaryRow('Poliçe', widget.insurance.type),
+                _summaryRow('claim.summary_policy'.tr(), widget.insurance.type),
                 const SizedBox(height: 8),
-                _summaryRow('Hasar Türü', selectedDamageType),
+                _summaryRow('claim.summary_type'.tr(), selectedDamageType),
                 const SizedBox(height: 8),
                 _summaryRow(
-                  'Tarih',
+                  'claim.summary_date'.tr(),
                   dateController.text.isEmpty ? '-' : dateController.text,
                 ),
                 const SizedBox(height: 8),
                 _summaryRow(
                   switch (widget.insurance.category) {
-                    'vehicle' => 'Olay Yeri',
-                    'health' => 'Hastane / Klinik',
-                    'home' => 'Konut Adresi',
-                    'travel' => 'Ülke / Şehir',
-                    _ => 'Konum',
+                    'vehicle' => 'claim.summary_location_vehicle'.tr(),
+                    'health' => 'claim.summary_location_health'.tr(),
+                    'home' => 'claim.summary_location_home'.tr(),
+                    'travel' => 'claim.summary_location_travel'.tr(),
+                    _ => 'claim.summary_location'.tr(),
                   },
                   switch (widget.insurance.category) {
                     'vehicle' =>
@@ -574,9 +611,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
           validator: validator,
           readOnly: readOnly,
           onTap: onTap,
-          onTapUpOutside: (event) {
-            FocusScope.of(context).unfocus();
-          },
+          onTapUpOutside: (event) => FocusScope.of(context).unfocus(),
           controller: controller,
           maxLines: maxLines,
           keyboardType: keyboardType,
@@ -631,13 +666,13 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
                 : Text(
                     step == 3
                         ? switch (widget.insurance.category) {
-                            'vehicle' => 'Kaza Bildir',
-                            'health' => 'Tedavi Bildir',
-                            'home' => 'Hasar Bildir',
-                            'travel' => 'Olay Bildir',
-                            _ => 'Bildirimi Gönder',
+                            'vehicle' => 'claim.submit_vehicle'.tr(),
+                            'health' => 'claim.submit_health'.tr(),
+                            'home' => 'claim.submit_home'.tr(),
+                            'travel' => 'claim.submit_travel'.tr(),
+                            _ => 'common.send'.tr(),
                           }
-                        : 'Devam Et →',
+                        : 'common.continue'.tr(),
                     style: const TextStyle(
                       fontFamily: 'DM Sans',
                       fontSize: 15,
@@ -652,32 +687,32 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
     );
   }
 
-  Widget _buildSuccessScreen() {
+  Widget _buildSuccessScreen(String refNo) {
     final (title, subtitle, info) = switch (widget.insurance.category) {
       'vehicle' => (
-        'Kaza Bildirimi Alındı!',
-        'Kaza bildiriminiz başarıyla oluşturuldu.',
-        'Eksper en kısa sürede sizinle iletişime geçecektir. Tahmini süre 24-48 saat.',
+        'claim.success_title_vehicle'.tr(),
+        'claim.success_subtitle_vehicle'.tr(),
+        'claim.success_info'.tr(),
       ),
       'health' => (
-        'Tedavi Bildirimi Alındı!',
-        'Tedavi bildiriminiz başarıyla oluşturuldu.',
-        'Sağlık danışmanımız en kısa sürede sizinle iletişime geçecektir. Tahmini süre 24-48 saat.',
+        'claim.success_title_health'.tr(),
+        'claim.success_subtitle_health'.tr(),
+        'claim.success_info_health'.tr(),
       ),
       'home' => (
-        'Hasar Bildirimi Alındı!',
-        'Konut hasar bildiriminiz başarıyla oluşturuldu.',
-        'Konut eksperi en kısa sürede sizinle iletişime geçecektir. Tahmini süre 24-48 saat.',
+        'claim.success_title_home'.tr(),
+        'claim.success_subtitle_home'.tr(),
+        'claim.success_info_home'.tr(),
       ),
       'travel' => (
-        'Olay Bildirimi Alındı!',
-        'Seyahat olay bildiriminiz başarıyla oluşturuldu.',
-        'Seyahat destek ekibimiz en kısa sürede sizinle iletişime geçecektir. Tahmini süre 24-48 saat.',
+        'claim.success_title_travel'.tr(),
+        'claim.success_subtitle_travel'.tr(),
+        'claim.success_info_travel'.tr(),
       ),
       _ => (
-        'Bildirim Alındı!',
-        'Bildiriminiz başarıyla oluşturuldu.',
-        'Eksper en kısa sürede sizinle iletişime geçecektir. Tahmini süre 24-48 saat.',
+        'claim.success_title'.tr(),
+        'claim.success_subtitle'.tr(),
+        'claim.success_info'.tr(),
       ),
     };
 
@@ -722,7 +757,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
-              Text('#HDR-2025-08741', style: context.textTheme.headlineSmall),
+              Text('#$refNo', style: context.textTheme.headlineSmall),
               const SizedBox(height: 24),
               Container(
                 padding: const EdgeInsets.all(16),
@@ -765,7 +800,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
                     ),
                   ),
                   child: Text(
-                    'Poliçelerime Dön',
+                    'claim.back_to_policies'.tr(),
                     style: context.textTheme.titleLarge,
                   ),
                 ),
@@ -799,10 +834,13 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
                 children: [
                   const Text('📷', style: TextStyle(fontSize: 28)),
                   const SizedBox(height: 8),
-                  Text('Fotoğraf Ekle', style: context.textTheme.titleMedium),
+                  Text(
+                    'claim.photo_add'.tr(),
+                    style: context.textTheme.titleMedium,
+                  ),
                   const SizedBox(height: 4),
                   Text(
-                    'Hasar fotoğrafları süreci hızlandırır',
+                    'claim.photo_helper'.tr(),
                     style: context.textTheme.labelSmall,
                     textAlign: TextAlign.center,
                   ),

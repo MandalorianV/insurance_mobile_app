@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:insurance_mobile_app/core/error/app_error.dart';
@@ -12,23 +13,23 @@ class NoInternetView extends StatelessWidget {
     final (emoji, title, subtitle) = switch (error) {
       AppError.noInternet => (
         '📡',
-        'İnternet Bağlantısı Yok',
-        'Lütfen bağlantınızı kontrol edip tekrar deneyin.',
+        'no_internet.title_no_internet'.tr(),
+        'no_internet.subtitle_no_internet'.tr(),
       ),
       AppError.timeout => (
         '⏱',
-        'Bağlantı Zaman Aşımı',
-        'Sunucu yanıt vermiyor, lütfen tekrar deneyin.',
+        'no_internet.title_timeout'.tr(),
+        'no_internet.subtitle_timeout'.tr(),
       ),
       AppError.serverError => (
         '🔧',
-        'Sunucu Hatası',
-        'Bir sorun oluştu, lütfen daha sonra tekrar deneyin.',
+        'no_internet.title_server_error'.tr(),
+        'no_internet.subtitle_server_error'.tr(),
       ),
       AppError.unknown => (
         '⚠️',
-        'Bir Hata Oluştu',
-        'Beklenmeyen bir hata oluştu, lütfen tekrar deneyin.',
+        'no_internet.title_unknown'.tr(),
+        'no_internet.subtitle_unknown'.tr(),
       ),
     };
 
@@ -67,7 +68,7 @@ class NoInternetView extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Tekrar Dene',
+                    'no_internet.retry'.tr(),
                     style: context.textTheme.titleLarge,
                   ),
                 ),
@@ -79,7 +80,7 @@ class NoInternetView extends StatelessWidget {
                 child: TextButton(
                   onPressed: () => context.go('/'),
                   child: Text(
-                    'Ana Sayfaya Dön',
+                    'no_internet.back'.tr(),
                     style: context.textTheme.titleLarge?.copyWith(
                       color: context.appColors.textSub,
                     ),

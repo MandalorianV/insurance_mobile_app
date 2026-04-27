@@ -29,7 +29,6 @@ class ClaimBloc extends Bloc<ClaimEvent, ClaimState> {
   void add(ClaimEvent event) {
     if (event is! RetryLastEvent) {
       _lastEvent = event;
-      print(_lastEvent);
     }
     super.add(event);
   }

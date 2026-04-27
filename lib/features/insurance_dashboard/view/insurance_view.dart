@@ -22,98 +22,92 @@ class _InsuranceViewState extends State<InsuranceView> with InsuranceViewMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 20),
-            Expanded(
-              child: BlocConsumer<InsuranceBloc, InsuranceState>(
-                listener: (context, state) {
-                  if (state is InsuranceListError) {
-                    ErrorSnackBar.show(
-                      context,
-                      message: state.message,
-                      onRetry: onRefresh,
-                    );
-                  }
+        child: BlocBuilder<InsuranceBloc, InsuranceState>(
+          buildWhen: (previous, current) {
+            return current is LoadingListState ||
+                current is GetInsuranceListState ||
+                current is InsuranceListErrorState ||
+                current is InsuranceListEmptyState;
+          },
+          builder: (context, state) {
+            if (state is LoadingListState) {
+              return const SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SummaryCardShimmer(),
+                    SizedBox(height: 20),
+                    InsuranceListShimmer(),
+                  ],
+                ),
+              );
+            }
+
+            if (state is InsuranceListErrorState) {
+              return AppErrorWidget(
+                title: 'dashboard.error_title'.tr(),
+                subtitle: 'dashboard.error_subtitle'.tr(),
+                onRetry: () {
+                  if (!context.mounted) return;
+                  context.read<InsuranceBloc>().add(RetryLastEvent());
                 },
-                builder: (context, state) {
-                  if (state is LoadingListState) {
-                    return const SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SummaryCardShimmer(),
-                          SizedBox(height: 20),
-                          InsuranceListShimmer(),
-                        ],
-                      ),
-                    );
-                  }
+              );
+            }
 
-                  if (state is InsuranceListError) {
-                    return AppErrorWidget(
-                      title: 'dashboard.error_title'.tr(),
-                      subtitle: 'dashboard.error_subtitle'.tr(),
-                      onRetry: onRefresh,
-                    );
-                  }
+            if (state is InsuranceListEmptyState) {
+              return AppEmptyWidget(
+                title: 'dashboard.empty_title'.tr(),
+                subtitle: 'dashboard.empty_subtitle'.tr(),
+                icon: Icons.policy_outlined,
+              );
+            }
 
-                  if (state is InsuranceEmptyState) {
-                    return AppEmptyWidget(
-                      title: 'dashboard.empty_title'.tr(),
-                      subtitle: 'dashboard.empty_subtitle'.tr(),
-                      icon: Icons.policy_outlined,
-                    );
-                  }
-
-                  if (state is GetInsuranceListState) {
-                    return RefreshIndicator(
-                      onRefresh: () async => onRefresh(),
-                      color: context.appColors.accent,
-                      backgroundColor: context.appColors.card,
-                      child: CustomScrollView(
-                        slivers: [
-                          SliverToBoxAdapter(child: _buildSummaryCard(state)),
-                          const SliverToBoxAdapter(child: SizedBox(height: 20)),
-                          SliverToBoxAdapter(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                              ),
-                              child: Text(
-                                'dashboard.section_title'.tr(),
-                                style: context.textTheme.labelSmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 1.2,
-                                ),
-                              ),
-                            ),
+            if (state is GetInsuranceListState) {
+              return RefreshIndicator(
+                onRefresh: () async => onRefresh(),
+                color: context.appColors.accent,
+                backgroundColor: context.appColors.card,
+                child: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(child: _buildHeader()),
+                    const SliverToBoxAdapter(child: SizedBox(height: 20)),
+                    SliverToBoxAdapter(child: _buildSummaryCard(state)),
+                    const SliverToBoxAdapter(child: SizedBox(height: 20)),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Text(
+                          'dashboard.section_title'.tr(),
+                          style: context.textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.2,
                           ),
-                          const SliverToBoxAdapter(child: SizedBox(height: 12)),
-                          SliverPadding(
-                            padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-                            sliver: SliverList.separated(
-                              itemCount: state.insuranceList.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(height: 12),
-                              itemBuilder: (context, index) {
-                                return _InsuranceCard(
-                                  insurance: state.insuranceList[index],
-                                );
-                              },
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    );
-                  }
+                    ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 12)),
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+                      sliver: SliverList.separated(
+                        itemCount: state.insuranceList.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          return _InsuranceCard(
+                            onTap: () => onInsuranceTap(
+                              context,
+                              state.insuranceList[index],
+                            ),
+                            insurance: state.insuranceList[index],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
 
-                  return const SizedBox();
-                },
-              ),
-            ),
-          ],
+            return const SizedBox();
+          },
         ),
       ),
     );
@@ -150,8 +144,9 @@ class _InsuranceViewState extends State<InsuranceView> with InsuranceViewMixin {
               ),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: const Center(
-              child: Text('🔔', style: TextStyle(fontSize: 18)),
+            child: GestureDetector(
+              onTap: () => context.push('/settings'),
+              child: Icon(Icons.settings_outlined),
             ),
           ),
         ],
@@ -167,7 +162,7 @@ class _InsuranceViewState extends State<InsuranceView> with InsuranceViewMixin {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [context.appColors.accentSoft, Color(0xFF1a2a4a)],
+            colors: [context.appColors.accentSoft, context.appColors.card],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -219,13 +214,14 @@ class _InsuranceViewState extends State<InsuranceView> with InsuranceViewMixin {
 // ── Insurance Card ────────────────────────────────────────────
 class _InsuranceCard extends StatelessWidget {
   final InsuranceModel insurance;
-  const _InsuranceCard({required this.insurance});
+  final VoidCallback? onTap;
+  const _InsuranceCard({required this.insurance, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final statusColor = insurance.statusColorHex.toColor();
     return GestureDetector(
-      onTap: () => context.go('/insuranceDetails', extra: insurance),
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

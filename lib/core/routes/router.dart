@@ -7,6 +7,7 @@ import 'package:insurance_mobile_app/features/claim/view/claim_view.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/models/insurance_model.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/view/insurance_view.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/view/insurance_view_details.dart';
+import 'package:insurance_mobile_app/features/settings/view/settings_view.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -15,6 +16,7 @@ final GoRouter router = GoRouter(
       path: '/',
       builder: (_, __) => const InsuranceView(),
       routes: [
+        GoRoute(path: '/settings', builder: (_, __) => const SettingsView()),
         GoRoute(
           path: '/insuranceDetails',
           builder: (_, state) {

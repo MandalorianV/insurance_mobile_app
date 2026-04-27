@@ -35,8 +35,9 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/mock_data/mock_insurance_dashboard.json
-    - assets/mock_data/mock_data_claim_types.json
-    - assets/mock_data/mock_claim_records.json
+    - assets/mock_data/tr/mock_insurance_dashboard.json
+    - assets/mock_data/en/mock_insurance_dashboard.json
+    - assets/mock_data/tr/mock_data_claim_types.json
+    - assets/mock_data/en/mock_data_claim_types.json
     - assets/translations/tr.json
     - assets/translations/en.json

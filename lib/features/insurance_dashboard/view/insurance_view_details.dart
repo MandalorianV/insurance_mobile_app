@@ -1,9 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:insurance_mobile_app/core/helpers/hex_to_color_extension.dart';
 import 'package:insurance_mobile_app/core/widgets/error_widgets.dart';
 import 'package:insurance_mobile_app/core/widgets/shimmer_widgets.dart';
+import 'package:insurance_mobile_app/features/claim/models/claim_record_model.dart';
+import 'package:insurance_mobile_app/features/insurance_dashboard/bloc/insurance_bloc.dart';
+import 'package:insurance_mobile_app/features/insurance_dashboard/view_mixin/insurance_view_details_mixin.dart';
 import 'package:insurance_mobile_app/theme/theme_extension.dart';
 import '../models/insurance_model.dart';
 
@@ -15,7 +19,8 @@ class InsuranceViewDetails extends StatefulWidget {
   State<InsuranceViewDetails> createState() => _InsuranceViewDetailsState();
 }
 
-class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
+class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
+    with InsuranceViewDetailsMixin {
   InsuranceModel get insurance => widget.insurance;
 
   // Detay sayfası şu an statik veri gösteriyor.
@@ -223,7 +228,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
 
   Widget _buildInfoGrid(BuildContext context) {
     final items = [
-      {'label': 'policy_detail.start_date'.tr(), 'value': '22 Apr 2024'},
+      {'label': 'policy_detail.start_date'.tr(), 'value': insurance.startDate},
       {'label': 'policy_detail.end_date'.tr(), 'value': insurance.expiry},
       {'label': 'policy_detail.coverage'.tr(), 'value': insurance.coverage},
       {
@@ -231,6 +236,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
         'value': insurance.premium,
       },
     ];
+
     return GridView.count(
       crossAxisCount: 2,
       crossAxisSpacing: 10,
@@ -250,9 +256,19 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(item['label']!, style: context.textTheme.labelSmall),
+              Text(
+                item['label']!,
+                style: context.textTheme.labelSmall,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
               const SizedBox(height: 4),
-              Text(item['value']!, style: context.textTheme.titleSmall),
+              Text(
+                item['value']!,
+                style: context.textTheme.titleSmall,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ],
           ),
         );
@@ -331,43 +347,54 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
   }
 
   Widget _buildClaimsHistoryCard(BuildContext context) {
-    //TODO: Detayları gösterebiliriz. Şimdilik sadece kayıt sayısını gösteriyor.
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: context.colorCard,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: context.colorBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'policy_detail.claims_history'.tr(),
-                style: context.textTheme.titleMedium,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: context.colors.primary.withOpacity(0.13),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  '${insurance.claimsCount} ${'common.records'.tr()}',
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: context.colors.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
+    return BlocBuilder<InsuranceBloc, InsuranceState>(
+      buildWhen: (previous, current) =>
+          current is LoadingRecordListState ||
+          current is GetInsuranceRecordsListState ||
+          current is InsuranceRecordsListEmptyState ||
+          current is InsuranceRecordsListErrorState,
+      builder: (context, state) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: context.colorCard,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: context.colorBorder),
           ),
-          const SizedBox(height: 12),
-          insurance.claimsCount == 0
-              ? Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'policy_detail.claims_history'.tr(),
+                    style: context.textTheme.titleMedium,
+                  ),
+                  if (state is GetInsuranceRecordsListState)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: context.colors.primary.withOpacity(0.13),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '${state.insuranceRecordsList.length} ${'common.records'.tr()}',
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              if (state is InsuranceRecordsListEmptyState)
+                Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Text(
@@ -376,12 +403,98 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
                     ),
                   ),
                 )
-              : Text(
-                  'policy_detail.existing_claims'.tr(
-                    namedArgs: {'count': '${insurance.claimsCount}'},
+              else if (state is InsuranceRecordsListErrorState)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Text(
+                      'policy_detail.error_subtitle'.tr(),
+                      style: context.textTheme.bodyMedium,
+                    ),
                   ),
-                  style: context.textTheme.bodyMedium,
+                )
+              else if (state is GetInsuranceRecordsListState)
+                Column(
+                  children: state.insuranceRecordsList
+                      .map((r) => _buildClaimRecordItem(context, r))
+                      .toList(),
+                )
+              else if (state is LoadingRecordListState)
+                Center(child: CircularProgressIndicator())
+              else
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Text(
+                      'policy_detail.no_claims'.tr(),
+                      style: context.textTheme.bodyMedium,
+                    ),
+                  ),
                 ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildClaimRecordItem(BuildContext context, ClaimRecord record) {
+    final statusColor = switch (record.status) {
+      'approved' => context.appColors.success,
+      'rejected' => context.appColors.danger,
+      'in_progress' => context.appColors.accent,
+      _ => context.appColors.textMuted,
+    };
+
+    final statusLabel = switch (record.status) {
+      'approved' => 'claim_detail.status_approved'.tr(),
+      'rejected' => 'claim_detail.status_rejected'.tr(),
+      'in_progress' => 'claim_detail.status_in_progress'.tr(),
+      _ => 'claim_detail.status_pending'.tr(),
+    };
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.appColors.bg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: context.appColors.border),
+      ),
+      child: Row(
+        children: [
+          Text(record.claimTypeEmoji, style: const TextStyle(fontSize: 24)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  record.claimTypeLabel,
+                  style: context.textTheme.titleSmall,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '#${record.refNo} · ${record.createdAt}',
+                  style: context.textTheme.labelSmall,
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: statusColor.withOpacity(0.13),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              statusLabel,
+              style: context.textTheme.labelSmall?.copyWith(
+                color: statusColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -416,11 +529,11 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails> {
             icon: const Text('⚡', style: TextStyle(fontSize: 16)),
             label: Text(
               switch (insurance.category) {
-                'vehicle' => 'Kaza Bildir',
-                'health' => 'Tedavi Bildir',
-                'home' => 'Hasar Bildir',
-                'travel' => 'Olay Bildir',
-                _ => 'Hasar Bildir',
+                'vehicle' => 'claim.submit_vehicle'.tr(),
+                'health' => 'claim.submit_health'.tr(),
+                'home' => 'claim.submit_home'.tr(),
+                'travel' => 'claim.submit_travel'.tr(),
+                _ => 'claim.submit_home'.tr(),
               },
               style: context.textTheme.labelLarge?.copyWith(
                 color: Colors.white,

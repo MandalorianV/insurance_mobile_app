@@ -4,6 +4,7 @@ part 'insurance_model.freezed.dart';
 part 'insurance_model.g.dart';
 
 @freezed
+@freezed
 abstract class InsuranceModel with _$InsuranceModel {
   const factory InsuranceModel({
     required int id,
@@ -14,6 +15,7 @@ abstract class InsuranceModel with _$InsuranceModel {
     required String status,
     @JsonKey(name: 'status_color') required String statusColorHex,
     @JsonKey(name: 'policy_no') required String policyNo,
+    @JsonKey(name: 'start_date') required String startDate, // 👈
     required String expiry,
     required String premium,
     required String period,

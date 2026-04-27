@@ -1,26 +1,36 @@
 import 'package:dio/dio.dart';
+import 'package:insurance_mobile_app/core/network/interceptor/error_interceptor.dart';
 import 'package:insurance_mobile_app/core/network/interceptor/mock_interceptor.dart';
 
 class DioClient {
+  static final DioClient _instance = DioClient._init();
+  factory DioClient() => _instance;
+
   late final Dio _dio;
 
-  DioClient() {
+  DioClient._init() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://api.insuranceapp.com', // Fake bir base url
+        baseUrl: 'https://api.insuranceapp.com',
         connectTimeout: const Duration(seconds: 5),
         receiveTimeout: const Duration(seconds: 3),
+        headers: {
+          'Accept-Language': 'tr', // default
+        },
       ),
     );
 
-    // Sadece debug modunda veya test için MockInterceptor ekliyoruz
-    _dio.interceptors.add(MockInterceptor());
-
-    // Logları konsolda görmek için (Opsiyonel)
-    _dio.interceptors.add(
+    _dio.interceptors.addAll([
+      MockInterceptor(),
+      ErrorInterceptor(),
       LogInterceptor(responseBody: true, requestBody: true),
-    );
+    ]);
   }
 
   Dio get instance => _dio;
+
+  // Dil değişince çağır
+  void setLocale(String languageCode) {
+    _dio.options.headers['Accept-Language'] = languageCode;
+  }
 }

@@ -8,6 +8,7 @@
     "status": "Aktif",
     "status_color": "#22D3A5",
     "policy_no": "ARC-2024-00812",
+    "start_date": "22 Nis 2024",
     "expiry": "15 Mar 2026",
     "premium": "₺4.200",
     "period": "/ yıl",
@@ -16,7 +17,7 @@
     "claims_count": 0,
     "coverage_items": [
       { "name": "Maddi Hasar", "limit": "₺250.000", "covered": true },
-      { "name": "Bodily Injury", "limit": "₺500.000", "covered": true },
+      { "name": "Bedensel Hasar", "limit": "₺500.000", "covered": true },
       { "name": "Cam Hasarı", "limit": "₺5.000", "covered": true },
       { "name": "Sel / Doğal Afet", "limit": "Yok", "covered": false }
     ]
@@ -30,7 +31,8 @@
     "status": "Aktif",
     "status_color": "#22D3A5",
     "policy_no": "SGL-2024-03341",
-    "expiry": "01 Jul 2025",
+    "start_date": "01 Oca 2024",
+    "expiry": "01 Tem 2025",
     "premium": "₺2.850",
     "period": "/ ay",
     "coverage": "Yatarak + Ayakta",
@@ -52,7 +54,8 @@
     "status": "Yenileme Gerekli",
     "status_color": "#F59E0B",
     "policy_no": "KNT-2023-07112",
-    "expiry": "30 Apr 2025",
+    "start_date": "30 Nis 2023",
+    "expiry": "30 Nis 2025",
     "premium": "₺1.600",
     "period": "/ yıl",
     "coverage": "Yangın + Hırsızlık",
@@ -66,25 +69,26 @@
     ]
   },
   {
-  "id": 4,
-  "type": "Seyahat Sigortası",
-  "category": "travel",
-  "subtitle": "Avrupa Bölgesi · Multi-Trip",
-  "emoji": "✈️",
-  "status": "Aktif",
-  "status_color": "#22D3A5",
-  "policy_no": "SYH-2024-00456",
-  "expiry": "22 Dec 2025",
-  "premium": "₺890",
-  "period": "/ yıl",
-  "coverage": "Medikal + Bagaj Koruması",
-  "gradient_hex": ["#2a1a4a", "#1a0f30"],
-  "claims_count": 0,
-  "coverage_items": [
-    { "name": "Acil Tıbbi Yardım", "limit": "€30.000", "covered": true },
-    { "name": "Bagaj Kaybı/Zararı", "limit": "₺15.000", "covered": true },
-    { "name": "Uçuş Gecikmesi", "limit": "₺2.500", "covered": true },
-    { "name": "Kayıp Pasaport", "limit": "Yok", "covered": false }
-  ]
-}
+    "id": 4,
+    "type": "Seyahat Sigortası",
+    "category": "travel",
+    "subtitle": "Avrupa Bölgesi · Multi-Trip",
+    "emoji": "✈️",
+    "status": "Aktif",
+    "status_color": "#22D3A5",
+    "policy_no": "SYH-2024-00456",
+    "start_date": "22 Ara 2024",
+    "expiry": "22 Ara 2025",
+    "premium": "₺890",
+    "period": "/ yıl",
+    "coverage": "Medikal + Bagaj Koruması",
+    "gradient_hex": ["#2a1a4a", "#1a0f30"],
+    "claims_count": 0,
+    "coverage_items": [
+      { "name": "Acil Tıbbi Yardım", "limit": "€30.000", "covered": true },
+      { "name": "Bagaj Kaybı/Zararı", "limit": "₺15.000", "covered": true },
+      { "name": "Uçuş Gecikmesi", "limit": "₺2.500", "covered": true },
+      { "name": "Kayıp Pasaport", "limit": "Yok", "covered": false }
+    ]
+  }
 ]
