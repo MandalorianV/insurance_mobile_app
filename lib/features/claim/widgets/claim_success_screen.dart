@@ -55,7 +55,7 @@ class ClaimSuccessScreen extends StatelessWidget {
                 height: 80,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: context.appColors.success.withOpacity(0.13),
+                  color: context.appColors.success.withValues(alpha: 0.13),
                   border: Border.all(
                     color: context.appColors.success,
                     width: 2,

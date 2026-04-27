@@ -44,7 +44,7 @@ class InsuranceCard extends StatelessWidget {
                   height: 100,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.04),
+                    color: Colors.white.withValues(alpha: 0.04),
                   ),
                 ),
               ),
@@ -59,7 +59,7 @@ class InsuranceCard extends StatelessWidget {
                           width: 46,
                           height: 46,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
+                            color: Colors.white.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: Center(
@@ -84,7 +84,7 @@ class InsuranceCard extends StatelessWidget {
                               Text(
                                 insurance.subtitle,
                                 style: context.textTheme.bodySmall?.copyWith(
-                                  color: Colors.white.withOpacity(0.6),
+                                  color: Colors.white.withValues(alpha: 0.6),
                                 ),
                               ),
                             ],
@@ -96,10 +96,10 @@ class InsuranceCard extends StatelessWidget {
                             vertical: 3,
                           ),
                           decoration: BoxDecoration(
-                            color: statusColor.withOpacity(0.13),
+                            color: statusColor.withValues(alpha: 0.13),
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
-                              color: statusColor.withOpacity(0.4),
+                              color: statusColor.withValues(alpha: 0.4),
                             ),
                           ),
                           child: Text(
@@ -113,7 +113,10 @@ class InsuranceCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 14),
-                    Divider(color: Colors.white.withOpacity(0.06), height: 1),
+                    Divider(
+                      color: Colors.white.withValues(alpha: 0.06),
+                      height: 1,
+                    ),
                     const SizedBox(height: 14),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,7 +172,7 @@ class InsuranceCard extends StatelessWidget {
         Text(
           label,
           style: context.textTheme.labelSmall?.copyWith(
-            color: Colors.white.withOpacity(0.6),
+            color: Colors.white.withValues(alpha: 0.6),
           ),
         ),
         const SizedBox(height: 2),
@@ -185,7 +188,7 @@ class InsuranceCard extends StatelessWidget {
                     TextSpan(
                       text: ' $suffix',
                       style: context.textTheme.labelSmall?.copyWith(
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withValues(alpha: 0.6),
                       ),
                     ),
                   ]

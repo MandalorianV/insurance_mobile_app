@@ -35,7 +35,7 @@ class ClaimBottomButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: context.appColors.accent.withOpacity(0.25),
+                color: context.appColors.accent.withValues(alpha: 0.25),
                 blurRadius: 24,
                 offset: const Offset(0, 8),
               ),

@@ -65,7 +65,15 @@
     "existing_claims": "{count} adet geçmiş hasar kaydı mevcut",
     "create_claim_btn": "Hasar Bildirimi Oluştur",
     "error_title": "Detay yüklenemedi",
-    "error_subtitle": "Poliçe bilgileri alınamadı. Tekrar deneyin."
+    "error_subtitle": "Poliçe bilgileri alınamadı. Tekrar deneyin.",
+    "claims_history_vehicle": "Kaza Geçmişi",
+    "claims_history_health": "Tedavi Geçmişi",
+    "claims_history_home": "Konut Hasar Geçmişi",
+    "claims_history_travel": "Seyahat Olay Geçmişi",
+    "no_claims_vehicle": "Henüz kaza kaydı bulunmuyor.",
+    "no_claims_health": "Henüz tedavi kaydı bulunmuyor.",
+    "no_claims_home": "Henüz konut hasar kaydı bulunmuyor.",
+    "no_claims_travel": "Henüz seyahat olay kaydı bulunmuyor."
   },
 
   "claim": {

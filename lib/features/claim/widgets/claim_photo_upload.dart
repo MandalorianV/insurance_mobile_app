@@ -28,7 +28,7 @@ class ClaimPhotoUpload extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
               decoration: BoxDecoration(
-                color: context.appColors.card.withOpacity(0.5),
+                color: context.appColors.card.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                   color: context.appColors.border,
@@ -69,7 +69,7 @@ class ClaimPhotoUpload extends StatelessWidget {
                   child: Container(
                     width: 100,
                     decoration: BoxDecoration(
-                      color: context.appColors.card.withOpacity(0.5),
+                      color: context.appColors.card.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: context.appColors.border,

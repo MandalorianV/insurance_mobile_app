@@ -65,7 +65,15 @@
     "existing_claims": "{count} past claim(s) on record",
     "create_claim_btn": "File a Damage Claim",
     "error_title": "Could not load details",
-    "error_subtitle": "Failed to fetch policy information. Please retry."
+    "error_subtitle": "Failed to fetch policy information. Please retry.",
+    "claims_history_vehicle": "Accident History",
+    "claims_history_health": "Treatment History",
+    "claims_history_home": "Home Damage History",
+    "claims_history_travel": "Travel Incident History",
+    "no_claims_vehicle": "No accident records yet.",
+    "no_claims_health": "No treatment records yet.",
+    "no_claims_home": "No home damage records yet.",
+    "no_claims_travel": "No travel incident records yet."
   },
 
   "claim": {

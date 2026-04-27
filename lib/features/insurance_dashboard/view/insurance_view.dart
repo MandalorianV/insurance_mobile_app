@@ -166,7 +166,9 @@ class _InsuranceViewState extends State<InsuranceView> with InsuranceViewMixin {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: context.appColors.accent.withOpacity(0.2)),
+          border: Border.all(
+            color: context.appColors.accent.withValues(alpha: 0.2),
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -75,7 +75,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                 height: 160,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.04),
+                  color: Colors.white.withValues(alpha: 0.04),
                 ),
               ),
             ),
@@ -87,7 +87,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                 height: 120,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.03),
+                  color: Colors.white..withValues(alpha: 0.03),
                 ),
               ),
             ),
@@ -103,7 +103,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.08),
+                        color: Colors.white.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(
@@ -120,7 +120,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                         width: 60,
                         height: 60,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
+                          color: Colors.white.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(18),
                         ),
                         child: Center(
@@ -144,7 +144,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                           Text(
                             insurance.subtitle,
                             style: context.textTheme.bodyMedium?.copyWith(
-                              color: Colors.white.withOpacity(0.7),
+                              color: Colors.white.withValues(alpha: 0.7),
                             ),
                           ),
                         ],
@@ -159,7 +159,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                       vertical: 12,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.06),
+                      color: Colors.white..withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: Row(
@@ -171,7 +171,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                             Text(
                               'policy_detail.policy_no'.tr(),
                               style: context.textTheme.labelSmall?.copyWith(
-                                color: Colors.white.withOpacity(0.6),
+                                color: Colors.white.withValues(alpha: 0.6),
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -189,7 +189,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                             Text(
                               'policy_detail.status'.tr(),
                               style: context.textTheme.labelSmall?.copyWith(
-                                color: Colors.white.withOpacity(0.6),
+                                color: Colors.white.withValues(alpha: 0.6),
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -353,7 +353,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                 ),
                 if (i < insurance.coverageItems.length - 1)
                   Divider(
-                    color: context.colorBorder.withOpacity(0.5),
+                    color: context.colorBorder.withValues(alpha: 0.5),
                     height: 1,
                   ),
               ],
@@ -364,8 +364,25 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
     );
   }
 
-  // Claims history fetched via InsuranceBloc — triggered in mixin initState
+  // _buildClaimsHistoryCard — insurance_view_details.dart içine yapıştır
+
   Widget _buildClaimsHistoryCard(BuildContext context) {
+    final historyTitle = switch (insurance.category) {
+      'vehicle' => 'policy_detail.claims_history_vehicle'.tr(),
+      'health' => 'policy_detail.claims_history_health'.tr(),
+      'home' => 'policy_detail.claims_history_home'.tr(),
+      'travel' => 'policy_detail.claims_history_travel'.tr(),
+      _ => 'policy_detail.claims_history'.tr(),
+    };
+
+    final emptyText = switch (insurance.category) {
+      'vehicle' => 'policy_detail.no_claims_vehicle'.tr(),
+      'health' => 'policy_detail.no_claims_health'.tr(),
+      'home' => 'policy_detail.no_claims_home'.tr(),
+      'travel' => 'policy_detail.no_claims_travel'.tr(),
+      _ => 'policy_detail.no_claims'.tr(),
+    };
+
     return BlocBuilder<InsuranceBloc, InsuranceState>(
       buildWhen: (previous, current) =>
           current is LoadingRecordListState ||
@@ -386,10 +403,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'policy_detail.claims_history'.tr(),
-                    style: context.textTheme.titleMedium,
-                  ),
+                  Text(historyTitle, style: context.textTheme.titleMedium),
                   if (state is GetInsuranceRecordsListState)
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -397,7 +411,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: context.colors.primary.withOpacity(0.13),
+                        color: context.colors.primary.withValues(alpha: 0.13),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -428,7 +442,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                   ),
                 ),
                 GetInsuranceRecordsListState() => Column(
-                  children: (state).insuranceRecordsList
+                  children: state.insuranceRecordsList
                       .map((r) => ClaimRecordItem(record: r))
                       .toList(),
                 ),
@@ -436,8 +450,9 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Text(
-                      'policy_detail.no_claims'.tr(),
+                      emptyText,
                       style: context.textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
@@ -467,7 +482,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: context.appColors.accent.withOpacity(0.25),
+                color: context.appColors.accent.withValues(alpha: 0.25),
                 blurRadius: 24,
                 offset: const Offset(0, 8),
               ),

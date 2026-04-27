@@ -55,9 +55,9 @@ class AppErrorWidget extends StatelessWidget {
               height: 72,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: context.appColors.danger.withOpacity(0.1),
+                color: context.appColors.danger.withValues(alpha: 0.1),
                 border: Border.all(
-                  color: context.appColors.danger.withOpacity(0.3),
+                  color: context.appColors.danger.withValues(alpha: 0.3),
                   width: 1.5,
                 ),
               ),
@@ -122,9 +122,9 @@ class AppEmptyWidget extends StatelessWidget {
               height: 72,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: context.colors.primary.withOpacity(0.08),
+                color: context.colors.primary.withValues(alpha: 0.08),
                 border: Border.all(
-                  color: context.colors.primary.withOpacity(0.2),
+                  color: context.colors.primary.withValues(alpha: 0.2),
                   width: 1.5,
                 ),
               ),
@@ -167,9 +167,9 @@ class InlineErrorBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: context.colorDanger.withOpacity(0.1),
+        color: context.colorDanger.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: context.colorDanger.withOpacity(0.35)),
+        border: Border.all(color: context.colorDanger.withValues(alpha: 0.35)),
       ),
       child: Row(
         children: [
@@ -227,7 +227,7 @@ class ErrorSnackBar {
       SnackBar(
         duration: duration,
         margin: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-        backgroundColor: context.appColors.danger.withOpacity(0.93),
+        backgroundColor: context.appColors.danger..withValues(alpha: 0.93),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         behavior: SnackBarBehavior.floating,
         content: Row(
