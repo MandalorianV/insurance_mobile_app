@@ -137,7 +137,7 @@ class _InsuranceViewState extends State<InsuranceView> with InsuranceViewMixin {
             height: 42,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [context.appColors.accent, context.appColors.success],
+                colors: [context.appColors.accent, context.appColors.indigo],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

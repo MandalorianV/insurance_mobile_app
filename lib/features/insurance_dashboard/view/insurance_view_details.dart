@@ -87,7 +87,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                 height: 120,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white..withValues(alpha: 0.03),
+                  color: Colors.white.withValues(alpha: 0.03),
                 ),
               ),
             ),
@@ -159,7 +159,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                       vertical: 12,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white..withValues(alpha: 0.06),
+                      color: Colors.white.withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: Row(
@@ -411,13 +411,13 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: context.colors.primary.withValues(alpha: 0.13),
+                        color: context.appColors.accent.withValues(alpha: 0.13),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
                         '${state.insuranceRecordsList.length} ${'common.records'.tr()}',
                         style: context.textTheme.labelSmall?.copyWith(
-                          color: context.colors.primary,
+                          color: context.appColors.accent,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
