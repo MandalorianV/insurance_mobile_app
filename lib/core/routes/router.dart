@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:go_router/go_router.dart';
 import 'package:insurance_mobile_app/core/error/app_error.dart';
 import 'package:insurance_mobile_app/core/widgets/no_internet_view.dart';
