@@ -192,8 +192,11 @@
 
   "settings": {
     "title": "Ayarlar",
+    "theme": "Tema",
+    "theme_dark": "Koyu Tema",
+    "theme_light": "Açık Tema",
     "language": "Dil",
     "language_tr": "Türkçe",
     "language_en": "İngilizce"
-  }
+}
 }

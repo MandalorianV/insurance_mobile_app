@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:insurance_mobile_app/core/network/client/dio_interceptor.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/bloc/insurance_bloc.dart';
 import 'package:insurance_mobile_app/theme/theme_extension.dart';
+import 'package:insurance_mobile_app/theme/theme_manager.dart';
+import 'package:provider/provider.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -12,6 +14,7 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentLocale = context.locale.languageCode;
+    final isDark = context.isDark;
 
     return Scaffold(
       body: SafeArea(
@@ -20,6 +23,8 @@ class SettingsView extends StatelessWidget {
           children: [
             _buildHeader(context),
             const SizedBox(height: 24),
+            _buildThemeCard(context, isDark),
+            const SizedBox(height: 16),
             _buildLanguageCard(context, currentLocale),
           ],
         ),
@@ -52,6 +57,101 @@ class SettingsView extends StatelessWidget {
           const SizedBox(width: 12),
           Text('settings.title'.tr(), style: context.textTheme.headlineLarge),
         ],
+      ),
+    );
+  }
+
+  Widget _buildThemeCard(BuildContext context, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: context.appColors.card,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: context.appColors.border),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('settings.theme'.tr(), style: context.textTheme.titleMedium),
+            const SizedBox(height: 12),
+            _buildThemeOption(
+              context: context,
+              label: 'settings.theme_dark'.tr(),
+              icon: '🌙',
+              isSelected: isDark,
+              onTap: () {
+                if (!isDark) {
+                  context.read<ThemeManager>().changeTheme(ThemeEnum.dark);
+                  context.read<InsuranceBloc>().add(GetInsuranceListEvent());
+                  context.go('/');
+                }
+              },
+            ),
+            const SizedBox(height: 8),
+            _buildThemeOption(
+              context: context,
+              label: 'settings.theme_light'.tr(),
+              icon: '☀️',
+              isSelected: !isDark,
+              onTap: () {
+                if (isDark) {
+                  context.read<ThemeManager>().changeTheme(ThemeEnum.light);
+                  context.read<InsuranceBloc>().add(GetInsuranceListEvent());
+                  context.go('/');
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThemeOption({
+    required BuildContext context,
+    required String label,
+    required String icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? context.appColors.accentSoft
+              : context.appColors.bg,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected
+                ? context.appColors.accent
+                : context.appColors.border,
+            width: isSelected ? 1.5 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Text(icon, style: const TextStyle(fontSize: 22)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: context.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            if (isSelected)
+              Icon(
+                Icons.check_circle_rounded,
+                color: context.appColors.accent,
+                size: 20,
+              ),
+          ],
+        ),
       ),
     );
   }

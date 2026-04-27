@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:insurance_mobile_app/theme/theme_extension.dart';
 
 part 'insurance_model.freezed.dart';
 part 'insurance_model.g.dart';
@@ -20,6 +22,7 @@ abstract class InsuranceModel with _$InsuranceModel {
     required String premium,
     required String period,
     required String coverage,
+    @JsonKey(name: 'gradient_hex_light') required List<String> gradientHexLight,
     @JsonKey(name: 'gradient_hex') required List<String> gradientHex,
     @JsonKey(name: 'claims_count') required int claimsCount,
     @JsonKey(name: 'coverage_items') required List<CoverageItem> coverageItems,
@@ -39,4 +42,11 @@ abstract class CoverageItem with _$CoverageItem {
 
   factory CoverageItem.fromJson(Map<String, dynamic> json) =>
       _$CoverageItemFromJson(json);
+}
+
+extension InsuranceModelX on InsuranceModel {
+  bool get canClaim => status == 'Aktif' || status == 'Active';
+
+  List<String> gradientHexForTheme(BuildContext context) =>
+      context.isDark ? gradientHex : gradientHexLight;
 }

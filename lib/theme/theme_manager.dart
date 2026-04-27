@@ -24,15 +24,10 @@ class ThemeManager extends ChangeNotifier implements IThemeManager {
   ThemeEnum currentThemeEnum = ThemeEnum.light;
 
   // ── Başlangıçta kaydedilmiş temayı yükle ──────────────────
-  // main() içinde şöyle çağır:
-  //   await ThemeManager.instance.loadSavedTheme();
   Future<void> loadSavedTheme() async {
     final prefs = await SharedPreferences.getInstance();
     final saved = prefs.getString(_prefKey);
-    final theme = saved == 'dark'
-        ? ThemeEnum.dark
-        : ThemeEnum
-              .dark; //TODO: data güncellenmeli  renkler dark a göre geliyor.
+    final theme = saved == 'dark' ? ThemeEnum.dark : ThemeEnum.light;
     currentTheme = theme.generateTheme;
     currentThemeEnum = theme;
     notifyListeners();

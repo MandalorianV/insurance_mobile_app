@@ -14,6 +14,7 @@
     "period": "/ yıl",
     "coverage": "Kasko + Trafik",
     "gradient_hex": ["#1a3a6e", "#0f2347"],
+    "gradient_hex_light": ["#1e3a8a", "#1d4ed8"],
     "claims_count": 0,
     "coverage_items": [
       { "name": "Maddi Hasar", "limit": "₺250.000", "covered": true },
@@ -37,6 +38,7 @@
     "period": "/ ay",
     "coverage": "Yatarak + Ayakta",
     "gradient_hex": ["#1a4a3a", "#0f2d26"],
+    "gradient_hex_light": ["#065f46", "#047857"],
     "claims_count": 2,
     "coverage_items": [
       { "name": "Yatarak Tedavi", "limit": "Sınırsız", "covered": true },
@@ -60,6 +62,7 @@
     "period": "/ yıl",
     "coverage": "Yangın + Hırsızlık",
     "gradient_hex": ["#3a2a0f", "#241a08"],
+    "gradient_hex_light": ["#92400e", "#b45309"],
     "claims_count": 1,
     "coverage_items": [
       { "name": "Yangın", "limit": "₺1.500.000", "covered": true },
@@ -83,6 +86,7 @@
     "period": "/ yıl",
     "coverage": "Medikal + Bagaj Koruması",
     "gradient_hex": ["#2a1a4a", "#1a0f30"],
+    "gradient_hex_light": ["#3730a3", "#4338ca"],
     "claims_count": 0,
     "coverage_items": [
       { "name": "Acil Tıbbi Yardım", "limit": "€30.000", "covered": true },

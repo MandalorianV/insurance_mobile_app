@@ -39,6 +39,8 @@ mixin ClaimViewMixin on State<ClaimView> {
 
   ValueNotifier<List<XFile>> photosNotifier = ValueNotifier([]);
 
+  ValueNotifier<bool> showStep1Error = ValueNotifier(false);
+
   List<ClaimType> claimTypes = [];
 
   // Form keys for validation
@@ -155,11 +157,10 @@ mixin ClaimViewMixin on State<ClaimView> {
 
   void stepUpOnPressed(BuildContext context) {
     if (selectedClaimTypeId == null && step == 1) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('claim.validation_select_type'.tr())),
-      );
+      showStep1Error.value = true;
       return;
     }
+    showStep1Error.value = false;
     if (step == 2 && !formKeyStepTwo.currentState!.validate()) {
       return;
     }

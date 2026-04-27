@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:insurance_mobile_app/core/helpers/hex_to_color_extension.dart';
-import 'package:insurance_mobile_app/core/widgets/error_widgets.dart';
-import 'package:insurance_mobile_app/core/widgets/shimmer_widgets.dart';
-import 'package:insurance_mobile_app/features/claim/models/claim_record_model.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/bloc/insurance_bloc.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/view_mixin/insurance_view_details_mixin.dart';
+import 'package:insurance_mobile_app/features/insurance_dashboard/widgets/claim_record_item.dart';
 import 'package:insurance_mobile_app/theme/theme_extension.dart';
 import '../models/insurance_model.dart';
 
@@ -23,11 +21,6 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
     with InsuranceViewDetailsMixin {
   InsuranceModel get insurance => widget.insurance;
 
-  // Detay sayfası şu an statik veri gösteriyor.
-  // İleride BLoC'a bağlanacaksa buraya mixin / BlocBuilder eklenebilir.
-  bool _loading = false;
-  String? _error;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,28 +28,20 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
         children: [
           _buildHeroHeader(context),
           Expanded(
-            child: _loading
-                ? const PolicyDetailShimmer()
-                : _error != null
-                ? AppErrorWidget(
-                    title: 'policy_detail.error_title'.tr(),
-                    subtitle: 'policy_detail.error_subtitle'.tr(),
-                    onRetry: () => setState(() => _error = null),
-                  )
-                : SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildInfoGrid(context),
-                        const SizedBox(height: 16),
-                        _buildCoverageCard(context),
-                        const SizedBox(height: 16),
-                        _buildClaimsHistoryCard(context),
-                        const SizedBox(height: 24),
-                      ],
-                    ),
-                  ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildInfoGrid(context),
+                  const SizedBox(height: 16),
+                  _buildCoverageCard(context),
+                  const SizedBox(height: 16),
+                  _buildClaimsHistoryCard(context),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
           ),
           _buildCTAButton(context),
         ],
@@ -64,11 +49,15 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
     );
   }
 
+  // Hero header with gradient background, policy info and status badge
   Widget _buildHeroHeader(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: insurance.gradientHex.map((h) => h.toColor()).toList(),
+          colors: insurance
+              .gradientHexForTheme(context)
+              .map((h) => h.toColor())
+              .toList(),
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -77,6 +66,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
         bottom: false,
         child: Stack(
           children: [
+            // Decorative background circles
             Positioned(
               right: -40,
               top: -40,
@@ -106,6 +96,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Back button
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
@@ -115,9 +106,9 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                         color: Colors.white.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_back_ios_new_rounded,
-                        color: context.appColors.textPrimary,
+                        color: Colors.white,
                         size: 16,
                       ),
                     ),
@@ -145,13 +136,15 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                         children: [
                           Text(
                             insurance.type,
-                            style: context.textTheme.headlineMedium,
+                            style: context.textTheme.headlineMedium?.copyWith(
+                              color: Colors.white,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             insurance.subtitle,
                             style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.appColors.textSub.withOpacity(0.8),
+                              color: Colors.white.withOpacity(0.7),
                             ),
                           ),
                         ],
@@ -159,6 +152,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                     ],
                   ),
                   const SizedBox(height: 16),
+                  // Policy no and status row
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -176,12 +170,16 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                           children: [
                             Text(
                               'policy_detail.policy_no'.tr(),
-                              style: context.textTheme.labelSmall,
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: Colors.white.withOpacity(0.6),
+                              ),
                             ),
                             const SizedBox(height: 2),
                             Text(
                               insurance.policyNo,
-                              style: context.textTheme.titleSmall,
+                              style: context.textTheme.titleSmall?.copyWith(
+                                color: Colors.white,
+                              ),
                             ),
                           ],
                         ),
@@ -190,7 +188,9 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                           children: [
                             Text(
                               'policy_detail.status'.tr(),
-                              style: context.textTheme.labelSmall,
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: Colors.white.withOpacity(0.6),
+                              ),
                             ),
                             const SizedBox(height: 2),
                             Row(
@@ -226,6 +226,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
     );
   }
 
+  // Key policy info displayed in a 2-column grid
   Widget _buildInfoGrid(BuildContext context) {
     final items = [
       {'label': 'policy_detail.start_date'.tr(), 'value': insurance.startDate},
@@ -237,45 +238,62 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
       },
     ];
 
-    return GridView.count(
-      crossAxisCount: 2,
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      childAspectRatio: 2.2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      children: items.map((item) {
-        return Container(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-          decoration: BoxDecoration(
-            color: context.colorCard,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: context.colorBorder),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
+    Widget buildItem(Map<String, String> item) {
+      return Container(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        decoration: BoxDecoration(
+          color: context.colorCard,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: context.colorBorder),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              item['label']!,
+              style: context.textTheme.labelSmall,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              item['value']!,
+              style: context.textTheme.titleSmall,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        IntrinsicHeight(
+          child: Row(
             children: [
-              Text(
-                item['label']!,
-                style: context.textTheme.labelSmall,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                item['value']!,
-                style: context.textTheme.titleSmall,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+              Expanded(child: buildItem(items[0])),
+              const SizedBox(width: 10),
+              Expanded(child: buildItem(items[1])),
             ],
           ),
-        );
-      }).toList(),
+        ),
+        const SizedBox(height: 10),
+        IntrinsicHeight(
+          child: Row(
+            children: [
+              Expanded(child: buildItem(items[2])),
+              const SizedBox(width: 10),
+              Expanded(child: buildItem(items[3])),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
+  // Coverage items list with covered/not covered indicators
   Widget _buildCoverageCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -346,6 +364,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
     );
   }
 
+  // Claims history fetched via InsuranceBloc — triggered in mixin initState
   Widget _buildClaimsHistoryCard(BuildContext context) {
     return BlocBuilder<InsuranceBloc, InsuranceState>(
       buildWhen: (previous, current) =>
@@ -392,19 +411,14 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                 ],
               ),
               const SizedBox(height: 12),
-
-              if (state is InsuranceRecordsListEmptyState)
-                Center(
+              switch (state) {
+                LoadingRecordListState() => const Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Text(
-                      'policy_detail.no_claims'.tr(),
-                      style: context.textTheme.bodyMedium,
-                    ),
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: CircularProgressIndicator(),
                   ),
-                )
-              else if (state is InsuranceRecordsListErrorState)
-                Center(
+                ),
+                InsuranceRecordsListErrorState() => Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Text(
@@ -412,17 +426,13 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                       style: context.textTheme.bodyMedium,
                     ),
                   ),
-                )
-              else if (state is GetInsuranceRecordsListState)
-                Column(
-                  children: state.insuranceRecordsList
-                      .map((r) => _buildClaimRecordItem(context, r))
+                ),
+                GetInsuranceRecordsListState() => Column(
+                  children: (state).insuranceRecordsList
+                      .map((r) => ClaimRecordItem(record: r))
                       .toList(),
-                )
-              else if (state is LoadingRecordListState)
-                Center(child: CircularProgressIndicator())
-              else
-                Center(
+                ),
+                _ => Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Text(
@@ -431,6 +441,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
                     ),
                   ),
                 ),
+              },
             ],
           ),
         );
@@ -438,68 +449,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
     );
   }
 
-  Widget _buildClaimRecordItem(BuildContext context, ClaimRecord record) {
-    final statusColor = switch (record.status) {
-      'approved' => context.appColors.success,
-      'rejected' => context.appColors.danger,
-      'in_progress' => context.appColors.accent,
-      _ => context.appColors.textMuted,
-    };
-
-    final statusLabel = switch (record.status) {
-      'approved' => 'claim_detail.status_approved'.tr(),
-      'rejected' => 'claim_detail.status_rejected'.tr(),
-      'in_progress' => 'claim_detail.status_in_progress'.tr(),
-      _ => 'claim_detail.status_pending'.tr(),
-    };
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: context.appColors.bg,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.appColors.border),
-      ),
-      child: Row(
-        children: [
-          Text(record.claimTypeEmoji, style: const TextStyle(fontSize: 24)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  record.claimTypeLabel,
-                  style: context.textTheme.titleSmall,
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '#${record.refNo} · ${record.createdAt}',
-                  style: context.textTheme.labelSmall,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.13),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              statusLabel,
-              style: context.textTheme.labelSmall?.copyWith(
-                color: statusColor,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
+  // CTA button — navigates to claim filing screen
   Widget _buildCTAButton(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
@@ -525,7 +475,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
           ),
           child: ElevatedButton.icon(
             onPressed: () =>
-                context.go('/insuranceDetails/claim', extra: insurance),
+                context.push('/insuranceDetails/claim', extra: insurance),
             icon: const Text('⚡', style: TextStyle(fontSize: 16)),
             label: Text(
               switch (insurance.category) {
