@@ -3,34 +3,55 @@ import 'package:insurance_mobile_app/core/network/interceptor/error_interceptor.
 import 'package:insurance_mobile_app/core/network/interceptor/mock_interceptor.dart';
 
 class DioClient {
-  static final DioClient _instance = DioClient._init();
-  factory DioClient() => _instance;
+  DioClient({
+    this.baseUrl = 'https://api.insuranceapp.com',
+    this.languageCode = 'tr',
+    this.enableLogging = true,
+    this.useMockInterceptor = true,
+  }) {
+    _dio = _createDio();
+  }
+
+  final String baseUrl;
+  final String languageCode;
+  final bool enableLogging;
+  final bool useMockInterceptor;
 
   late final Dio _dio;
 
-  DioClient._init() {
-    _dio = Dio(
+  Dio _createDio() {
+    final dio = Dio(
       BaseOptions(
-        baseUrl: 'https://api.insuranceapp.com',
+        baseUrl: baseUrl,
         connectTimeout: const Duration(seconds: 5),
         receiveTimeout: const Duration(seconds: 3),
-        headers: {
-          'Accept-Language': 'tr', // default
-        },
+
+        headers: {'Accept-Language': languageCode},
       ),
     );
 
-    _dio.interceptors.addAll([
-      MockInterceptor(),
-      ErrorInterceptor(),
-      LogInterceptor(responseBody: true, requestBody: true),
-    ]);
+    if (useMockInterceptor) {
+      dio.interceptors.add(MockInterceptor());
+    }
+
+    dio.interceptors.add(ErrorInterceptor());
+
+    if (enableLogging) {
+      dio.interceptors.add(
+        LogInterceptor(responseBody: true, requestBody: true),
+      );
+    }
+
+    return dio;
   }
 
   Dio get instance => _dio;
 
-  // Dil değişince çağır
   void setLocale(String languageCode) {
     _dio.options.headers['Accept-Language'] = languageCode;
+  }
+
+  void close({bool force = false}) {
+    _dio.close(force: force);
   }
 }

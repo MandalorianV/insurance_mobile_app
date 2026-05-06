@@ -39,6 +39,7 @@ class ClaimStep3 extends StatelessWidget {
           Text('claim.step3_title'.tr(), style: context.textTheme.bodyMedium),
           const SizedBox(height: 16),
           ClaimFormField(
+            key: const Key('claim_phone_field'),
             label: 'claim.field_phone'.tr(),
             controller: phoneController,
             hint: 'claim.field_phone_hint'.tr(),

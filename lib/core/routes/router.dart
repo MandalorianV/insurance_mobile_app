@@ -7,7 +7,7 @@ import 'package:insurance_mobile_app/features/insurance_dashboard/view/insurance
 import 'package:insurance_mobile_app/features/insurance_dashboard/view/insurance_view_details.dart';
 import 'package:insurance_mobile_app/features/settings/view/settings_view.dart';
 
-final GoRouter router = GoRouter(
+GoRouter createRouter() => GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(
@@ -18,6 +18,9 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/insuranceDetails',
           builder: (_, state) {
+            if (state.extra is! InsuranceModel) {
+              return const NoInternetView(error: AppError.unknown);
+            }
             final insurance = state.extra as InsuranceModel;
             return InsuranceViewDetails(insurance: insurance);
           },
@@ -25,6 +28,9 @@ final GoRouter router = GoRouter(
             GoRoute(
               path: '/claim',
               builder: (_, state) {
+                if (state.extra is! InsuranceModel) {
+                  return const NoInternetView(error: AppError.unknown);
+                }
                 final insurance = state.extra as InsuranceModel;
                 return ClaimView(insurance: insurance);
               },

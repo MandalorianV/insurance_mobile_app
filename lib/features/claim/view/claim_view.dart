@@ -49,6 +49,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
               }
               if (state is ClaimSubmissionSuccess) {
                 return ClaimSuccessScreen(
+                  key: const Key('claim_success_screen'),
                   refNo: state.refNo,
                   insurance: widget.insurance,
                 );
@@ -66,6 +67,7 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
                     ),
                   ),
                   ClaimBottomButton(
+                    key: const Key('claim_next_button'),
                     step: step,
                     isSubmitting: isSubmitting,
                     insurance: widget.insurance,
@@ -88,7 +90,6 @@ class _ClaimViewState extends State<ClaimView> with ClaimViewMixin {
         showStep1Error: showStep1Error,
         selectedClaimTypeId: selectedClaimTypeId,
         onDamageTypeSelected: (label) {
-          // ← onSelectType değil
           selectedClaimTypeId = claimTypes
               .firstWhere((ct) => ct.label == label)
               .id;

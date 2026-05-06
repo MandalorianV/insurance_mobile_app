@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:insurance_mobile_app/core/error/app_error.dart';
 import 'package:insurance_mobile_app/core/network/client/dio_interceptor.dart';
@@ -213,7 +214,7 @@ mixin ClaimViewMixin on State<ClaimView> {
     }
   }
 
-  void listener(context, state) {
+  void listener(BuildContext context, dynamic state) {
     if (state is ClaimTypesError ||
         state is ClaimSubmissionError ||
         state is ClaimRecordsError) {

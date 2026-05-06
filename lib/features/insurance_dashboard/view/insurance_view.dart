@@ -91,6 +91,7 @@ class _InsuranceViewState extends State<InsuranceView> with InsuranceViewMixin {
                         separatorBuilder: (_, __) => const SizedBox(height: 12),
                         itemBuilder: (context, index) {
                           return InsuranceCard(
+                            key: Key('insurance_card_$index'),
                             onTap: () => onInsuranceTap(
                               context,
                               state.insuranceList[index],

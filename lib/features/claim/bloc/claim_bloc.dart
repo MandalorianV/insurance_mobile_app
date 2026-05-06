@@ -11,8 +11,8 @@ part 'claim_event.dart';
 part 'claim_state.dart';
 
 class ClaimBloc extends Bloc<ClaimEvent, ClaimState> {
-  final ClaimRepository _repository;
-  ClaimEvent? _lastEvent; // 👈 class level
+  final ClaimRepositoryInterface _repository;
+  ClaimEvent? _lastEvent;
 
   ClaimBloc(this._repository) : super(ClaimInitial()) {
     on<GetClaimTypesEvent>(_onGetClaimTypes);
@@ -26,15 +26,13 @@ class ClaimBloc extends Bloc<ClaimEvent, ClaimState> {
     });
   }
 
-  @override // 👈 class level override
+  @override
   void add(ClaimEvent event) {
     if (event is! RetryLastEvent) {
       _lastEvent = event;
     }
     super.add(event);
   }
-
-  // ... handler'lar
 
   AppError _mapError(dynamic e) {
     if (e is AppError) return e;
@@ -96,7 +94,7 @@ class ClaimBloc extends Bloc<ClaimEvent, ClaimState> {
     SubmitClaimEvent event,
     Emitter<ClaimState> emit,
   ) async {
-    if (state is ClaimSubmitting) return; // double submit koruması
+    if (state is ClaimSubmitting) return;
     emit(ClaimSubmitting());
     try {
       final refNo = await _repository.submitClaim(event.claimData);

@@ -11,7 +11,7 @@ part 'insurance_event.dart';
 part 'insurance_state.dart';
 
 class InsuranceBloc extends Bloc<InsuranceEvent, InsuranceState> {
-  final InsuranceRepository _insuranceRepository;
+  final InsuranceRepositoryInterface _insuranceRepository;
   InsuranceEvent? _lastEvent;
   InsuranceBloc(this._insuranceRepository) : super(InsuranceInitial()) {
     on<GetInsuranceListEvent>(_getInsuranceList);

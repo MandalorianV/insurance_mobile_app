@@ -39,6 +39,7 @@ class ClaimStep2Vehicle extends StatelessWidget {
           Text('claim.step2_title'.tr(), style: context.textTheme.bodyMedium),
           const SizedBox(height: 16),
           ClaimFormField(
+            key: const Key('claim_date_field'),
             readOnly: true,
             label: 'claim.field_date'.tr(),
             controller: dateController,
@@ -50,6 +51,7 @@ class ClaimStep2Vehicle extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           ClaimFormField(
+            key: const Key('claim_location_field'),
             label: 'claim.field_location'.tr(),
             controller: locationController,
             hint: 'claim.field_location_hint'.tr(),
@@ -59,12 +61,14 @@ class ClaimStep2Vehicle extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           ClaimFormField(
+            key: const Key('claim_plate_field'),
             label: 'claim.field_plate'.tr(),
             controller: plateController,
             hint: 'claim.field_plate_hint'.tr(),
           ),
           const SizedBox(height: 14),
           ClaimFormField(
+            key: const Key('claim_description_field'),
             label: 'claim.field_description'.tr(),
             controller: descController,
             hint: 'claim.field_description_hint'.tr(),

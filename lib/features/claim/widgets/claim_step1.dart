@@ -57,6 +57,7 @@ class ClaimStep1 extends StatelessWidget {
                 ...claimTypes.map((ct) {
                   final isSelected = resolvedSelectedId == ct.id;
                   return GestureDetector(
+                    key: Key('claim_type_item_${ct.id}'),
                     onTap: () {
                       showStep1Error.value = false;
 

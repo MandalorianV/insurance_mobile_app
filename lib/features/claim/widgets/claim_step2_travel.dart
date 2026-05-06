@@ -37,6 +37,7 @@ class ClaimStep2Travel extends StatelessWidget {
           Text('claim.step2_title'.tr(), style: context.textTheme.bodyMedium),
           const SizedBox(height: 16),
           ClaimFormField(
+            key: const Key('claim_date_field'),
             readOnly: true,
             label: 'claim.field_date'.tr(),
             controller: dateController,
@@ -48,6 +49,7 @@ class ClaimStep2Travel extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           ClaimFormField(
+            key: const Key('claim_country_field'),
             label: 'claim.field_country'.tr(),
             controller: countryController,
             hint: 'claim.field_country_hint'.tr(),
@@ -57,6 +59,7 @@ class ClaimStep2Travel extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           ClaimFormField(
+            key: const Key('claim_description_field'),
             label: 'claim.field_description'.tr(),
             controller: descController,
             hint: 'claim.field_description_hint'.tr(),

@@ -42,6 +42,7 @@ class ClaimStep2Health extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ClaimFormField(
+            key: const Key('claim_date_field'),
             readOnly: true,
             label: 'claim.field_date'.tr(),
             controller: dateController,
@@ -53,6 +54,7 @@ class ClaimStep2Health extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           ClaimFormField(
+            key: const Key('claim_hospital_field'),
             label: 'claim.field_hospital'.tr(),
             controller: hospitalController,
             hint: 'claim.field_hospital_hint'.tr(),
@@ -62,6 +64,7 @@ class ClaimStep2Health extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           ClaimFormField(
+            key: const Key('claim_diagnosis_field'),
             label: 'claim.field_diagnosis'.tr(),
             controller: diagnosisController,
             hint: 'claim.field_diagnosis_hint'.tr(),
@@ -71,6 +74,7 @@ class ClaimStep2Health extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           ClaimFormField(
+            key: const Key('claim_description_field'),
             label: 'claim.field_description'.tr(),
             controller: descController,
             hint: 'claim.field_description_hint'.tr(),

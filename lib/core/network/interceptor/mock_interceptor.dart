@@ -9,6 +9,18 @@ import 'package:path_provider/path_provider.dart';
 class MockInterceptor extends Interceptor {
   static const _fileName = 'mock_claim_records.json';
 
+  static Future<void> reset() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/$_fileName');
+    if (await file.exists()) {
+      await file.delete();
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // Internal helpers
+  // ─────────────────────────────────────────────────────────────
+
   String _locale(RequestOptions options) {
     final lang = options.headers['Accept-Language'] as String?;
     return (lang == 'tr' || lang == 'en') ? lang! : 'tr';
@@ -31,6 +43,10 @@ class MockInterceptor extends Interceptor {
     await file.writeAsString(jsonEncode(data));
   }
 
+  // ─────────────────────────────────────────────────────────────
+  // Request handler
+  // ─────────────────────────────────────────────────────────────
+
   @override
   void onRequest(
     RequestOptions options,
@@ -38,6 +54,7 @@ class MockInterceptor extends Interceptor {
   ) async {
     final locale = _locale(options);
 
+    // GET /api/insurances
     if (options.path == '/api/insurances') {
       await Future.delayed(const Duration(milliseconds: 1000));
       final String response = await rootBundle.loadString(
@@ -49,9 +66,10 @@ class MockInterceptor extends Interceptor {
       );
     }
 
+    // POST /api/insurance-records
     if (options.path == '/api/insurance-records') {
       await Future.delayed(const Duration(milliseconds: 1000));
-      String policyNo = options.data['policyNo'] ?? "";
+      final String policyNo = options.data['policyNo'] ?? '';
       final existing = await _readAll();
       final filtered = existing
           .where((c) => c['policy_no'] == policyNo)
@@ -61,25 +79,29 @@ class MockInterceptor extends Interceptor {
       );
     }
 
+    // GET /api/claim-types
     if (options.path == '/api/claim-types') {
       await Future.delayed(const Duration(milliseconds: 1000));
       final String response = await rootBundle.loadString(
         'assets/mock_data/$locale/mock_data_claim_types.json',
       );
-      int id = options.data['id'] ?? 1;
-      Map<String, dynamic> data = jsonDecode(response);
-      dynamic responseData = data[id.toString()];
+      final int id = options.data['id'] ?? 1;
+      final Map<String, dynamic> data = jsonDecode(response);
+      final dynamic responseData = data[id.toString()];
+
+      // TEST SCENARIO: Sağlık sigortası claim types — unknown error
       if (id == 2) {
-        // TEST SCENARIO: Sağlık sigortası claim types — unknown error
         return handler.reject(
           DioException(requestOptions: options, error: AppError.unknown),
         );
       }
+
       return handler.resolve(
         Response(requestOptions: options, data: responseData, statusCode: 200),
       );
     }
 
+    // POST /api/claims
     if (options.path == '/api/claims' && options.method == 'POST') {
       await Future.delayed(const Duration(milliseconds: 800));
       final existing = await _readAll();
@@ -94,13 +116,16 @@ class MockInterceptor extends Interceptor {
       };
       existing.add(newClaim);
       await _writeAll(existing);
-      int id = options.data['id'] ?? 1;
+
+      final int id = options.data['id'] ?? 1;
+
+      // TEST SCENARIO: Konut sigortası submit — server error
       if (id == 3) {
-        // TEST SCENARIO: Konut sigortası submit — server error
         return handler.reject(
           DioException(requestOptions: options, error: AppError.serverError),
         );
       }
+
       return handler.resolve(
         Response(
           requestOptions: options,
@@ -110,6 +135,7 @@ class MockInterceptor extends Interceptor {
       );
     }
 
+    // GET /api/claims
     if (options.path == '/api/claims' && options.method == 'GET') {
       await Future.delayed(const Duration(milliseconds: 600));
       final existing = await _readAll();

@@ -489,6 +489,7 @@ class _InsuranceViewDetailsState extends State<InsuranceViewDetails>
             ],
           ),
           child: ElevatedButton.icon(
+            key: Key('cta_claim_button'),
             onPressed: () =>
                 context.push('/insuranceDetails/claim', extra: insurance),
             icon: const Text('⚡', style: TextStyle(fontSize: 16)),

@@ -42,6 +42,7 @@ class ClaimStep2Home extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ClaimFormField(
+            key: const Key('claim_date_field'),
             readOnly: true,
             label: 'claim.field_date'.tr(),
             controller: dateController,
@@ -53,6 +54,7 @@ class ClaimStep2Home extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           ClaimFormField(
+            key: const Key('claim_address_field'),
             label: 'claim.field_address'.tr(),
             controller: addressController,
             hint: 'claim.field_address_hint'.tr(),
@@ -62,6 +64,7 @@ class ClaimStep2Home extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           ClaimFormField(
+            key: const Key('claim_damage_area_field'),
             label: 'claim.field_damage_area'.tr(),
             controller: damageAreaController,
             hint: 'claim.field_damage_area_hint'.tr(),
@@ -71,6 +74,7 @@ class ClaimStep2Home extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           ClaimFormField(
+            key: const Key('claim_description_field'),
             label: 'claim.field_description'.tr(),
             controller: descController,
             hint: 'claim.field_description_hint'.tr(),
