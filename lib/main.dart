@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insurance_mobile_app/core/network/client/dio_interceptor.dart';
 import 'package:insurance_mobile_app/core/routes/router.dart';
+import 'package:insurance_mobile_app/core/shaders/app_shader_warm_up.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/bloc/insurance_bloc.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/repository/insurance_repository.dart';
 import 'package:insurance_mobile_app/features/insurance_dashboard/services/insurance_services.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 void main() async {
   // Initialize Flutter binding, localization and restore saved theme
   WidgetsFlutterBinding.ensureInitialized();
+  PaintingBinding.shaderWarmUp = const AppShaderWarmUp();
   await EasyLocalization.ensureInitialized();
   await ThemeManager.instance.loadSavedTheme();
 
