@@ -247,20 +247,105 @@ flutter run -d android
 
 | Package | Version | Purpose |
 |---|---|---|
-| `flutter_bloc` | `^9.1.1` | State management |
-| `bloc` | `^9.2.0` | Core bloc library |
-| `equatable` | `^2.0.8` | Value equality for Bloc states |
-| `dio` | `^5.9.2` | HTTP client |
-| `go_router` | `^17.0.0` | Declarative routing |
-| `easy_localization` | `^3.0.7` | i18n / localization |
-| `freezed` | `^3.2.3` | Immutable model & union type generation |
-| `freezed_annotation` | `^3.1.0` | Annotations for Freezed |
-| `json_annotation` | `^4.9.0` | Annotations for json_serializable |
-| `image_picker` | `^1.2.1` | Photo upload in claim form |
-| `shimmer` | `^3.0.0` | Loading skeleton animations |
 | `connectivity_plus` | `^7.1.1` | Network connectivity detection |
-| `provider` | `^6.1.5+1` | ThemeManager reactive propagation |
+| `dio` | `^5.9.2` | HTTP client |
+| `easy_localization` | `^3.0.7` | i18n / localization |
+| `equatable` | `^2.0.8` | Value equality for Bloc states |
+| `flutter_bloc` | `^9.1.1` | State management |
+| `freezed_annotation` | `^3.1.0` | Annotations for Freezed |
+| `go_router` | `^17.0.0` | Declarative routing |
+| `image_picker` | `^1.2.1` | Photo upload in claim form |
+| `json_annotation` | `^4.9.0` | Annotations for json_serializable |
 | `path_provider` | `^2.1.5` | Local file storage for mock claim records |
+| `provider` | `^6.1.5+1` | ThemeManager reactive propagation |
+| `shimmer` | `^3.0.0` | Loading skeleton animations |
+
+**Dev dependencies**
+
+| Package | Version | Purpose |
+|---|---|---|
+| `bloc` | `^9.2.0` | Core bloc library (transitive, pinned for test consistency) |
+| `bloc_test` | `^10.0.0` | `blocTest` helper for unit testing blocs |
+| `build_runner` | `^2.7.1` | Code generation runner |
+| `freezed` | `^3.2.3` | Immutable model & union type code generator |
+| `json_serializable` | `^6.11.2` | JSON code generator |
+| `mocktail` | `^1.0.5` | Mock & stub library for unit and repository tests |
+
+---
+
+## 🧪 Testing
+
+The project has three layers of tests covering business logic, data access, and end-to-end user flows.
+
+```
+test/
+└── features/
+    └── claim/
+        ├── claim_bloc_test.dart         # ClaimBloc unit tests
+        └── claim_repository_test.dart   # ClaimRepository unit tests
+
+integration_test/
+└── app_test.dart                        # Full end-to-end claim submission flow
+```
+
+### Test layers
+
+**Bloc tests** (`test/features/claim/claim_bloc_test.dart`) verify every event → state transition in isolation. The repository is replaced with a mock (`mocktail`) so no real I/O happens. Each test uses `bloc_test`'s `blocTest` helper to assert the exact sequence of emitted states.
+
+**Repository tests** (`test/features/claim/claim_repository_test.dart`) verify that raw service responses are correctly mapped to domain models and that `DioException`s are normalized to the right `AppError` variant. The service is mocked so no network calls are made.
+
+**Integration tests** (`integration_test/`) run the full app on a real device or emulator with `MockInterceptor` active. They drive the UI through complete user journeys — tapping, entering text, and asserting visible widgets — without any mocking at the widget level.
+
+### Test isolation design
+
+Each integration test starts a completely fresh app instance:
+
+- A new `DioClient` (with `useMockInterceptor: true`) is created per test, so interceptor state never leaks between runs.
+- A new `InsuranceBloc` is injected into `MainApp` via constructor, bypassing any previously accumulated bloc state.
+- `GoRouter` is instantiated inside `_MainAppState` (via `createRouter()`) rather than as a global singleton, so route history is reset to `initialLocation: '/'` at the start of every test.
+- `addTearDown(bloc.close)` guarantees the bloc is closed even if the test fails mid-way.
+
+### Run the tests
+
+**All unit tests:**
+
+```bash
+flutter test
+```
+
+**Bloc tests only:**
+
+```bash
+flutter test test/features/claim/claim_bloc_test.dart
+```
+
+**Repository tests only:**
+
+```bash
+flutter test test/features/claim/claim_repository_test.dart
+```
+
+**Integration tests** (requires a connected device or running emulator):
+
+```bash
+flutter test integration_test/app_test.dart
+```
+
+To run on a specific device:
+
+```bash
+flutter test integration_test/app_test.dart -d <device-id>
+```
+
+> Get available device IDs with `flutter devices`.
+
+### Integration test coverage
+
+| Test | Description |
+|---|---|
+| Full claim flow | Dashboard → policy detail → Step 1 (damage type) → Step 2 (date, location, description) → Step 3 (phone, summary) → success screen → back to dashboard |
+| Step 1 validation | Tapping Next without selecting a damage type shows a validation error and stays on Step 1 |
+| Step 2 validation | Tapping Next with empty required fields shows per-field validation errors and stays on Step 2 |
 
 ---
 
